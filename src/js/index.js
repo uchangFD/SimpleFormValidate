@@ -14,6 +14,7 @@
   class FormState {
     formEl;
     elementsForValidation;
+    validationTypes = [];
 
     constructor(form) {
       if (!(compareType(form, "element") || compareType(form, "string"))) {
@@ -50,10 +51,7 @@
       // params [name, validation[ Array['String'] ]]
 
       const { elementsForValidation } = this;
-      const params = Array.from(args);
-
-      const name = params.shift();
-      const [validationTypes] = params;
+      const [name, validationTypes] = Array.from(args);
 
       const [elementInfo] = elementsForValidation.filter(({ name: _name }) => _name === name);
 
@@ -63,9 +61,21 @@
       }
 
       elementInfo.validationTypes = elementInfo.validationTypes.concat(validationTypes);
-
-      return this;
     });
+
+    setValidationTypes = getValidatedMethod(["string"], ["function", "regexp"], ["string"])(
+      function(...args) {
+        const [type, checker, errorMsg] = Array.from(args);
+
+        this.validationTypes.push({
+          type,
+          checker,
+          errorMsg,
+        });
+
+        console.log(this.validationTypes);
+      },
+    );
 
     _collectElementInfo = (element) => {
       // 수집할 정보들 [name, nodeName, element, validationTypes]
@@ -79,11 +89,6 @@
         validationTypes: [],
       };
     };
-    // -- 검사할 태그들에 대한 스테이트 관리
-    // -- form 태그 내부에 있는 모든 값들을 수집 * [name]속성을 가지고 있지 않은 값들은 수집하지 않음.
-    // -- 수집한 값에 대한 정보를 가공
-    // 가공된 정보를 바탕으로 검사할 validation을 설정
-    // 값에 대한 셀렉션은 [name]속성을 가지고 판별
   }
 
   class ErrorMsg {
@@ -99,6 +104,12 @@
       this.formState.setValidationToElement(...args);
       return this;
     };
+
+    setValidationTypes = (...args) => {
+      console.log(...args);
+      this.formState.setValidationTypes(...args);
+      return this;
+    };
   }
 
   // const testMethod = utils.getValidatedMethod(["string"], ["string"])(function(...args) {
@@ -110,6 +121,10 @@
   formValidator
     .setValidationToElement("email", ["required", "email"])
     .setValidationToElement("password", ["required", "password"]);
+
+  formValidator
+    .setValidationTypes("email", /(.com)/, "이메일 형식이 아닙니다.")
+    .setValidationTypes("required", (value) => value.length !== 0, "필수 입력란입니다.");
 })(
   window,
   (function() {
