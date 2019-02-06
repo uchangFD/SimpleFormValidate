@@ -30,5 +30,6 @@ module.exports = {
     "no-prototype-builtins": 0,
     "wrap-iife": 0,
     "prefer-arrow-callback": 0,
+    "lines-between-class-members": 0,
   },
 };
