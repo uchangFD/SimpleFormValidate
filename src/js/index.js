@@ -34,7 +34,6 @@
       }
 
       this.init();
-      // console.log(this.setValidationToElement([]));
     }
 
     init = () => {
@@ -43,8 +42,6 @@
       self.elementsForValidation = Array.from(self.formEl.querySelectorAll("[name]")).map(
         self._collectElementInfo,
       );
-
-      console.log(self.elementsForValidation);
     };
 
     setValidationToElement = getValidatedMethod(["string"], ["string"])(function(...args) {
@@ -72,8 +69,6 @@
           checker,
           errorMsg,
         });
-
-        console.log(this.validationTypes);
       },
     );
 
@@ -106,25 +101,20 @@
     };
 
     setValidationTypes = (...args) => {
-      console.log(...args);
       this.formState.setValidationTypes(...args);
       return this;
     };
   }
 
-  // const testMethod = utils.getValidatedMethod(["string"], ["string"])(function(...args) {
-  //   console.log("testMethod", args);
-  // });
+  // const formValidator = new FormValidator("#form");
 
-  const formValidator = new FormValidator("#form");
+  // formValidator
+  //   .setValidationToElement("email", ["required", "email"])
+  //   .setValidationToElement("password", ["required", "password"]);
 
-  formValidator
-    .setValidationToElement("email", ["required", "email"])
-    .setValidationToElement("password", ["required", "password"]);
-
-  formValidator
-    .setValidationTypes("email", /(.com)/, "이메일 형식이 아닙니다.")
-    .setValidationTypes("required", (value) => value.length !== 0, "필수 입력란입니다.");
+  // formValidator
+  //   .setValidationTypes("email", /(.com)/, "이메일 형식이 아닙니다.")
+  //   .setValidationTypes("required", (value) => value.length !== 0, "필수 입력란입니다.");
 })(
   window,
   (function() {
@@ -144,7 +134,6 @@
       let result = true;
 
       if (typeof param !== "object") {
-        console.log("validationTypes: ", validationTypes);
         result = validationTypes.indexOf(getType(param)) > -1 ? true : false;
 
         if (!result) {
