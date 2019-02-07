@@ -55,12 +55,13 @@
       );
     };
 
-    setValidationToElement = getValidatedMethod(["string"], ["string"])(function(...args) {
+    setValidationToElement = getValidatedMethod(["string"], ["string"])(function(
+      name,
+      validationTypes,
+    ) {
       // params [name, validation[ Array['String'] ]]
 
       const { elementsForValidation } = this;
-      const [name, validationTypes] = Array.from(args);
-
       const [elementInfo] = elementsForValidation.filter(({ name: _name }) => _name === name);
 
       if (!elementInfo) {
@@ -72,9 +73,7 @@
     });
 
     setValidationTypes = getValidatedMethod(["string"], ["function", "regexp"], ["string"])(
-      function(...args) {
-        const [type, checker, errorMsg] = Array.from(args);
-
+      function(type, checker, errorMsg) {
         if (!this.validationTypes[type]) {
           this.validationTypes[type] = [];
         }
@@ -101,17 +100,15 @@
         const value = el.value;
         const validatedInfo = this._getValidatedInfo(validationTypes, value);
 
-        if (validatedInfo.length === 0) {
-          return result;
-        }
-
-        result[name] = {
+        result.push({
           el,
-          validatedInfo,
-        };
+          name,
+          result: validatedInfo,
+          isValid: validatedInfo.some(({ isValid }) => isValid),
+        });
 
         return result;
-      }, {});
+      }, []);
     };
 
     _getInvalidInfo = (type, value) => {
@@ -138,51 +135,183 @@
     };
 
     _getValidatedInfo = (validationTypes, value) => {
-      return validationTypes.reduce((invalidInfos, type) => {
-        invalidInfos = invalidInfos.concat(this._getInvalidInfo(type, value));
+      return validationTypes.reduce((validatedInfo, type) => {
+        validatedInfo = validatedInfo.concat(this._getInvalidInfo(type, value));
 
-        return invalidInfos;
+        return validatedInfo;
       }, []);
     };
   }
 
   class ErrorMsg {
-    constructor() {}
+    errorMsgs = [];
+    errorMsgTemplate;
+    targetsToAppendErrorMsg = [];
+
+    constructor() {
+      this.errorMsgTemplate = this._defaultTemplate();
+      console.log(this.errorMsgTemplate);
+    }
+
+    setErrorMsgTemplate = getValidatedMethod(["string"], "all", "all")(function(
+      tagName,
+      attributes,
+      styles,
+    ) {
+      const element = this._createElement(tagName);
+
+      this._setAttributes(element, attributes);
+      this._setStyles(element, styles);
+
+      this.errorMsgTemplate = element;
+      console.log("errorMsgTemplate: ", this.errorMsgTemplate);
+    });
+
+    setTargetToAppendErrorMsg = getValidatedMethod(['string'], ['string', 'element'])(function(name, target) {
+      let targetEl;
+
+      if (compareType(target, 'element')) {
+        targetEl = target;
+      } else {
+        targetEl = target.length !== 0 ? document.querySelector(target) : undefined;
+      }
+
+      if (!targetEl) {
+        console.error(`${target} 을 찾을 수 없습니다.`);
+        return this;
+      }
+
+      this.targetsToAppendErrorMsg = this.targetsToAppendErrorMsg.filter(({ name: _name }) => name !== _name);
+      this.targetsToAppendErrorMsg.push({
+        name,
+        targetEl,
+      });
+    })
+
+    makeErrorMsg = (validatedInfos) => {
+      const errorMsgTemplate = this.errorMsgTemplate;
+
+      this.errorMsgs = validatedInfos.reduce((_errorMsgs, { isValid, el, name, result }) => {
+        if (isValid || result.length === 0) {
+          return _errorMsgs;
+        }
+        
+        const cloneErrorMsgTemplate = errorMsgTemplate.cloneNode(true);
+        const invalidInfos = result.filter(({ isValid: _isValid }) => !_isValid);
+        const target = this._findTargetToAppendErrorMsg(name);
+
+        cloneErrorMsgTemplate.innerText = invalidInfos[0].errorMsg;
+
+        _errorMsgs.push({
+          target: target.length === 0 ? el.parentNode : target[0],
+          errorMsgEl: cloneErrorMsgTemplate,
+        });
+        
+        return _errorMsgs;
+      }, []);
+
+      console.log('this.errorMsgs: ', this.errorMsgs);
+
+      return this;
+    };
+
+    appendErrorMsg = () => {
+      this.errorMsgs.forEach(({ target, errorMsgEl }) => {
+        target.appendChild(errorMsgEl);
+        // errorMsgEl.parentNode.appendChild(errorMsgEl);
+      });
+
+      return this;
+    }
+
+    removeErrorMsgAll = () => {
+      this.errorMsgs.forEach(({ target, errorMsgEl }) => {
+        target.removeChild(errorMsgEl);
+      });
+
+      return this;
+    }
+
+    _findTargetToAppendErrorMsg = (name) => {
+      return this.targetsToAppendErrorMsg.filter(({ name: _name }) => _name === name).map(({ targetEl }) => targetEl);
+    }
+
+    _createElement = (tagName) => document.createElement(tagName);
+
+    _setAttributes = (el, attributes) => {
+      for (let prop in attributes) {
+        if (attributes.hasOwnProperty(prop)) {
+          el[prop] = attributes[prop];
+        }
+      }
+    };
+
+    _setStyles = (el, styles) => {
+      for (let prop in styles) {
+        if (styles.hasOwnProperty(prop)) {
+          el.styles[prop] = styles[prop];
+        }
+      }
+    };
+
+    _defaultTemplate = () => {
+      const el = document.createElement("span");
+
+      el.setAttribute("class", "error-msg");
+
+      return el;
+    };
   }
 
   class FormValidator {
     constructor(form) {
       this.formState = new FormState(form);
-      this.errorMsg = new ErrorMsg();
+      this.formErrorMsg = new ErrorMsg();
     }
 
-    setValidationToElement = (...args) => {
-      this.formState.setValidationToElement(...args);
+    setValidationToElement = (name, validationTypes) => {
+      this.formState.setValidationToElement(name, validationTypes);
       return this;
     };
 
-    setValidationTypes = (...args) => {
-      this.formState.setValidationTypes(...args);
+    setValidationTypes = (type, checker, errorMsg) => {
+      this.formState.setValidationTypes(type, checker, errorMsg);
       return this;
     };
+
+    setErrorMsgTemplate = (tagName, attributes, styles) => {
+      this.formErrorMsg.setErrorMsgTemplate(tagName, attributes, styles);
+      return this;
+    };
+
+    setTargetToAppendErrorMsg = (name, target) => {
+      this.formErrorMsg.setTargetToAppendErrorMsg(name, target);
+      return this;
+    }
 
     result = () => {
-      console.log(this.formState.validate());
-      return this;
+      const validatedInfos = this.formState.validate();
+
+      this.formErrorMsg.removeErrorMsgAll().makeErrorMsg(validatedInfos).appendErrorMsg();
+
+      return validatedInfos;
     };
   }
 
   const formValidator = new FormValidator("#form");
 
   formValidator
-    .setValidationToElement("email", ["required", "email"])
-    .setValidationToElement("password", ["required", "password"]);
+    .setValidationToElement("email", ['required'])
+    .setValidationToElement("password", ['required']);
 
   formValidator
     .setValidationTypes("email", /(.com)/, "이메일 형식이 아닙니다.")
     .setValidationTypes("required", (value) => value.length !== 0, "필수 입력란입니다.");
 
+  formValidator.setTargetToAppendErrorMsg('email', '.password-confirm-box');  
   formValidator.result();
+
+  window.formValidator = formValidator;
 })(
   window,
   (function() {
