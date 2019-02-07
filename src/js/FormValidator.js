@@ -150,7 +150,6 @@
 
     constructor() {
       this.errorMsgTemplate = this._defaultTemplate();
-      console.log(this.errorMsgTemplate);
     }
 
     setErrorMsgTemplate = getValidatedMethod(["string"], "all", "all")(function(
@@ -164,7 +163,6 @@
       this._setStyles(element, styles);
 
       this.errorMsgTemplate = element;
-      console.log("errorMsgTemplate: ", this.errorMsgTemplate);
     });
 
     setTargetToAppendErrorMsg = getValidatedMethod(['string'], ['string', 'element'])(function(name, target) {
@@ -209,8 +207,6 @@
         
         return _errorMsgs;
       }, []);
-
-      console.log('this.errorMsgs: ', this.errorMsgs);
 
       return this;
     };
