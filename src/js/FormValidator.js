@@ -179,6 +179,11 @@
     });
 
     setTargetToAppendErrorMsg = getValidatedMethod(['string'], ['string', 'element'])(function(name, target) {
+      // if (!this.elementsForValidation.some(({ name: _name }) => _name === name)) {
+      //   console.error(`addTarget으로 추가된 ${name}이 없습니다.`);
+      //   return false;
+      // }
+
       let targetEl;
 
       if (compareType(target, 'element')) {
@@ -197,6 +202,8 @@
         name,
         targetEl,
       });
+
+      console.log('this.targetsToAppendErrorMsg: ', this.targetsToAppendErrorMsg);
     })
 
     makeErrorMsg = (validatedInfos) => {
