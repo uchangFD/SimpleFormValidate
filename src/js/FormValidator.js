@@ -29,7 +29,7 @@
       }
 
       if (!this.formEl) {
-        console.error(`${this.formEl}은 존재하지 않는 element입니다.`);
+        console.error(`${form}은 존재하지 않는 element입니다.`);
         return false;
       }
 
@@ -55,7 +55,7 @@
       );
     };
 
-    setValidationToElement = getValidatedMethod(["string"], ["string"])(function(
+    addValidationToElement = getValidatedMethod(["string"], ["string"])(function(
       name,
       validationTypes,
     ) {
@@ -65,14 +65,14 @@
       const [elementInfo] = elementsForValidation.filter(({ name: _name }) => _name === name);
 
       if (!elementInfo) {
-        console.error(`${name}은 존재하지 않는 name 속성값입니다.`);
+        console.error(`[addValidation] ${name}은 존재하지 않는 name 속성값입니다.`);
         return this;
       }
 
       elementInfo.validationTypes = elementInfo.validationTypes.concat(validationTypes);
     });
 
-    setValidationTypes = getValidatedMethod(["string"], ["function", "regexp"], ["string"])(
+    addValidationTypes = getValidatedMethod(["string"], ["function", "regexp"], ["string"])(
       function(type, checker, errorMsg) {
         if (!this.validationTypes[type]) {
           this.validationTypes[type] = [];
@@ -110,6 +110,19 @@
         return result;
       }, []);
     };
+
+    removeValidationTypes = getValidatedMethod(['string'])(function(type) {
+      if (!this.validationTypes[type]) {
+        console.error(`[removeValidation] ${type}은 정의되지 않은 validation type입니다.`);
+        return false;
+      }
+
+      this.validationTypes[type] = undefined;
+    });
+
+    removeValidationToElement = getValidatedMethod(['string'])(function(name) {
+      this.elementsForValidation = this.elementsForValidation.filter(({ name: _name }) => _name !== name);
+    });
 
     _getInvalidInfo = (type, value) => {
       if (!this.validationTypes[type]) {
@@ -265,25 +278,37 @@
       this.formErrorMsg = new ErrorMsg();
     }
 
-    setValidationToElement = (name, validationTypes) => {
-      this.formState.setValidationToElement(name, validationTypes);
+    addTarget = (name, validationTypes) => {
+      this.formState.addValidationToElement(name, validationTypes);
       return this;
     };
 
-    setValidationTypes = (type, checker, errorMsg) => {
-      this.formState.setValidationTypes(type, checker, errorMsg);
+    addValidation = (type, checker, errorMsg) => {
+      this.formState.addValidationTypes(type, checker, errorMsg);
       return this;
     };
 
-    setErrorMsgTemplate = (tagName, attributes, styles) => {
+    removeTarget = (name) => {
+      this.formState.removeValidationToElement(name);
+      return this;
+    }
+
+    removeValidation = (type) => {
+      this.formState.removeValidationTypes(type);
+      return this;
+    }
+
+    setErrorMsg = (tagName, attributes, styles) => {
       this.formErrorMsg.setErrorMsgTemplate(tagName, attributes, styles);
       return this;
     };
 
-    setTargetToAppendErrorMsg = (name, target) => {
+    setErrorMsgPosition = (name, target) => {
       this.formErrorMsg.setTargetToAppendErrorMsg(name, target);
       return this;
     }
+
+
 
     result = () => {
       const validatedInfos = this.formState.validate();
