@@ -5,7 +5,7 @@ FormValidator
 
 <br>
 Useage
-=========
+======
 
 <div>
   <img src="./images/useage.png">
