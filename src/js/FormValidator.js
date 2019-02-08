@@ -202,8 +202,6 @@
         name,
         targetEl,
       });
-
-      console.log('this.targetsToAppendErrorMsg: ', this.targetsToAppendErrorMsg);
     })
 
     makeErrorMsg = (validatedInfos) => {
@@ -315,13 +313,14 @@
       return this;
     }
 
-
-
     result = () => {
+      return this.formState.validate();
+    }
+
+    validate = () => {
       const validatedInfos = this.formState.validate();
 
       this.formErrorMsg.removeErrorMsgAll().makeErrorMsg(validatedInfos).appendErrorMsg();
-
       return validatedInfos;
     };
   }
