@@ -4,6 +4,7 @@ FormValidator
 > 폼 유효성 검사 라이브러리.
 
 <br>
+
 Useage
 ======
 
@@ -23,11 +24,13 @@ formValidator
 
 formValidator.validate();
 ```
+
 <br>
+
 Method
 ======
 
-### `addTarget(name[String], validations[ Array[String] ])`
+#### `addTarget(name[String], validations[ Array[String] ])`
 ```javascript
 formValidator.addTarget("email", ["required", "email"]);
 ```
@@ -35,7 +38,7 @@ formValidator.addTarget("email", ["required", "email"]);
 
 <br>
 
-### `removeTarget(name[String])`
+#### `removeTarget(name[String])`
 ```javascript
 formValidator.removeTarget("email");
 ```
@@ -43,7 +46,7 @@ formValidator.removeTarget("email");
 
 <br>
 
-### `addValidation(type[String], matcher[Function|Regexp], errorMsg[String])`
+#### `addValidation(type[String], matcher[Function|Regexp], errorMsg[String])`
 ```javascript
 formValidator.addValidation("required", (value) => !!value, "필수 입력란입니다.");
 
@@ -55,7 +58,7 @@ formValidator.addValidation("number", /\d/, "숫자만 입력가능합니다.");
 
 <br>
 
-### `removeValidation[type[String])`
+#### `removeValidation[type[String])`
 ```javascript
 formValidator.addValidation("required");
 formValidator.addValidation("number");
@@ -64,7 +67,7 @@ formValidator.addValidation("number");
 
 <br>
 
-### `setErrorMsg[tagName[String], attributes[Object], styles[Object])`
+#### `setErrorMsg[tagName[String], attributes[Object], styles[Object])`
 ```javascript
 formValidator.setErrorMsg(
   "email", 
@@ -76,7 +79,7 @@ formValidator.setErrorMsg(
 
 <br>
 
-### `setErrorMsgPosition[name[String], target[Selector|Element]]`
+#### `setErrorMsgPosition[name[String], target[Selector|Element]]`
 ```javascript
 formValidator.setErrorMsgPosition('email', '.password-confirm-box');
 
@@ -88,7 +91,7 @@ formValidator.setErrorMsgPosition('email', document.querySelector('.password-con
 
 <br>
 
-### `result(Void)`
+#### `result(Void)`
 ```javascript
 formValidator.result();
 ```
@@ -98,7 +101,7 @@ formValidator.result();
   <img src="./images/result.png">
 </div>
 
-### `validate(Void)`
+#### `validate(Void)`
 ```javascript
 formValidator.validate();
 ```
