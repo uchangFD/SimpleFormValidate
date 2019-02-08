@@ -6,9 +6,9 @@
       "@babel/plugin-transform-runtime",
       {
         "corejs": false,
-        "helpers": true,
+        "helpers": false,
         "regenerator": false,
-        "useESModules": false
+        "useESModules": true
       }
     ],
     "@babel/plugin-transform-async-to-generator",

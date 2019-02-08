@@ -21,6 +21,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.5",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "css-loader": "^2.0.2",
     "eslint": "^5.11.0",
     "eslint-config-airbnb": "^17.1.0",
