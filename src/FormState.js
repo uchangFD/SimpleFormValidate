@@ -6,7 +6,7 @@ class FormState {
   validationTypes = {};
 
   constructor(form) {
-    if (!(compareType(form, "element") || compareType(form, "string"))) {
+    if (!compareType(form, "element") && !compareType(form, "string")) {
       console.error(`${form}은 string or element 타입이 아닙니다.`);
       return false;
     }
