@@ -1,3 +1,3 @@
-import FormValidator from "./FormValidator/FormValidator.js";
+import FormValidator from "./FormValidator/FormValidator";
 
 window.FormValidator = FormValidator;

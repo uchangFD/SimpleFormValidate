@@ -1,4 +1,4 @@
-import { compareType, getValidatedMethod } from "../utils/utils.js";
+import { compareType, getValidatedMethod } from "../utils/utils";
 
 class FormState {
   formEl;

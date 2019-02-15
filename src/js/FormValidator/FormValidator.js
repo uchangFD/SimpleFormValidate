@@ -1,5 +1,5 @@
-import FormState from "./FormState.js";
-import FormErrorMsg from "./FormErrorMsg.js";
+import FormState from "./FormState";
+import FormErrorMsg from "./FormErrorMsg";
 
 class FormValidator {
   constructor(form) {
