@@ -1,10 +1,10 @@
-const getType = (target) =>
+export const getType = (target) =>
   Object.prototype.toString
     .call(target)
     .slice(8, -1)
     .toLowerCase();
 
-const compareType = (target, type) => getType(target) === type;
+export const compareType = (target, type) => getType(target) === type;
 
 const validateTypeAboutParam = (param, validationTypes) => {
   if (validationTypes === "all") {
@@ -49,7 +49,7 @@ const validateTypeAboutParam = (param, validationTypes) => {
   return result;
 };
 
-const getValidatedMethod = (...validationTypes) => (fn) => {
+export const getValidatedMethod = (...validationTypes) => (fn) => {
   return function(...args) {
     const isValid = Array.from(args).reduce((result, arg, index) => {
       const _isValid = validateTypeAboutParam(arg, validationTypes[index]);
@@ -66,10 +66,4 @@ const getValidatedMethod = (...validationTypes) => (fn) => {
     }
     return fn.apply(this, args);
   };
-};
-
-export default {
-  getType,
-  compareType,
-  getValidatedMethod,
 };
