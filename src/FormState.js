@@ -11,14 +11,11 @@ class FormState {
     }
 
     if (compareType(form, "string")) {
-      this.formEl = document.querySelector(form);
-    } else {
-      this.formEl = form;
+      form = document.querySelector(form);
+      if (!form) throw new TypeError(`${form}은 존재하지 않는 element입니다.`);
     }
 
-    if (!this.formEl) {
-      throw new TypeError(`${form}은 존재하지 않는 element입니다.`);
-    }
+    this.formEl = form;
 
     this.init();
   }
