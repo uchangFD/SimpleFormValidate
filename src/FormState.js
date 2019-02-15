@@ -7,8 +7,7 @@ class FormState {
 
   constructor(form) {
     if (!compareType(form, "element") && !compareType(form, "string")) {
-      console.error(`${form}은 string or element 타입이 아닙니다.`);
-      return false;
+      throw new TypeError(`${form}은 string or element 타입이 아닙니다.`);
     }
 
     if (compareType(form, "string")) {
@@ -18,8 +17,7 @@ class FormState {
     }
 
     if (!this.formEl) {
-      console.error(`${form}은 존재하지 않는 element입니다.`);
-      return false;
+      throw new TypeError(`${form}은 존재하지 않는 element입니다.`);
     }
 
     this.init();
