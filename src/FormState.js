@@ -19,9 +19,7 @@ class FormState {
   }
 
   init () {
-    const self = this;
-
-    self.elementsForValidation = Array.from(self.formEl.querySelectorAll("[name]")).map(
+    this.elementsForValidation = Array.from(this.formEl.querySelectorAll("[name]")).map(
       (element) => {
         // 수집할 정보들 [name, nodeName, element, validationTypes]
         const name = element.name;
