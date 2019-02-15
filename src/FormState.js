@@ -1,10 +1,6 @@
 import { compareType, getValidatedMethod } from "./utils";
 
 class FormState {
-  formEl;
-  elementsForValidation;
-  validationTypes = {};
-
   constructor(form) {
     if (!compareType(form, "element") && !compareType(form, "string")) {
       throw new TypeError(`${form}은 string or element 타입이 아닙니다.`);
@@ -16,6 +12,8 @@ class FormState {
     }
 
     this.formEl = form;
+    this.elementsForValidation = null;
+    this.validationTypes = {};
 
     this.init();
   }
