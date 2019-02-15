@@ -1,6 +1,6 @@
-import FormValidator from '../src'
+import FormValidator from '../src';
 
-var formValidator = new FormValidator("#form");
+let formValidator = new FormValidator("#form");
 
 formValidator
   .addValidation("required", (value) => !!value, "필수 입력란입니다.");
@@ -10,6 +10,6 @@ formValidator
   .addTarget("password", ["required"]);
 
 document.forms[0].addEventListener('submit', e => {
-  e.preventDefault()
+  e.preventDefault();
   formValidator.validate();
-})
+});

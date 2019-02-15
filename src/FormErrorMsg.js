@@ -1,4 +1,4 @@
-import { compareType, getValidatedMethod } from "../utils/utils";
+import { compareType, getValidatedMethod } from "./utils";
 
 class FormErrorMsg {
   errorMsgs = [];

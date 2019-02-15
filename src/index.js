@@ -1,3 +1,3 @@
-import FormValidator from "./FormValidator/FormValidator";
+import FormValidator from "./FormValidator";
 
 export default FormValidator;
