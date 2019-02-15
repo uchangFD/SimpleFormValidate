@@ -1,3 +1,3 @@
 import FormValidator from "./FormValidator/FormValidator";
 
-window.FormValidator = FormValidator;
+export default FormValidator;
