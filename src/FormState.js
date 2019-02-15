@@ -12,27 +12,8 @@ class FormState {
     }
 
     this.formEl = form;
-    this.elementsForValidation = null;
+    this.elements = getElements(form);
     this.validationTypes = {};
-
-    this.init();
-  }
-
-  init () {
-    this.elementsForValidation = Array.from(this.formEl.querySelectorAll("[name]")).map(
-      (element) => {
-        // 수집할 정보들 [name, nodeName, element, validationTypes]
-        const name = element.name;
-        const nodeName = element.nodeName;
-
-        return {
-          name,
-          nodeName,
-          el: element,
-          validationTypes: [],
-        };
-      },
-    );
   }
 
   addValidationToElement = getValidatedMethod(["string"], ["string"])(function(
@@ -41,12 +22,11 @@ class FormState {
   ) {
     // params [name, validation[ Array['String'] ]]
 
-    const { elementsForValidation } = this;
-    const [elementInfo] = elementsForValidation.filter(({ name: _name }) => _name === name);
+    const { elements } = this;
+    const [elementInfo] = elements.filter(({ name: _name }) => _name === name);
 
     if (!elementInfo) {
       console.error(`[addValidation] ${name}은 존재하지 않는 name 속성값입니다.`);
-      return this;
     }
 
     elementInfo.validationTypes = elementInfo.validationTypes.concat(validationTypes);
@@ -68,13 +48,13 @@ class FormState {
   });
 
   validate = function() {
-    const { elementsForValidation } = this;
+    const { elements } = this;
 
     // result => 유효성 검사 통과하지 않은 element의 정보를 반환시켜야함.
     // 1. element의 값을 가지고 오고
     // 2. 유효성 검사하고
     // 3. 실패한 정보 반환(el, name, errorMsg, validationType)
-    return elementsForValidation.reduce((result, { el, name, validationTypes }) => {
+    return elements.reduce((result, { el, name, validationTypes }) => {
       if (validationTypes.length === 0) {
         return result;
       }
@@ -103,7 +83,7 @@ class FormState {
   });
 
   removeValidationToElement = getValidatedMethod(["string"])(function(name) {
-    this.elementsForValidation = this.elementsForValidation.filter(
+    this.elements = this.elements.filter(
       ({ name: _name }) => _name !== name,
     );
   });
@@ -141,3 +121,18 @@ class FormState {
 }
 
 export default FormState;
+
+function getElements(form) {
+  return Array.from(form)
+    .map(el => {
+      const name = el.name;
+      const nodeName = el.nodeName;
+
+      return {
+        name,
+        nodeName,
+        el,
+        validationTypes: [],
+      };
+    });
+}
