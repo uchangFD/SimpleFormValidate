@@ -53,7 +53,7 @@ class FormErrorMsg {
     });
   });
 
-  makeErrorMsg = (validatedInfos) => {
+  makeErrorMsg (validatedInfos) {
     const errorMsgTemplate = this.errorMsgTemplate;
 
     this.errorMsgs = validatedInfos.reduce((_errorMsgs, {
@@ -78,56 +78,56 @@ class FormErrorMsg {
     }, []);
 
     return this;
-  };
+  }
 
-  appendErrorMsg = () => {
+  appendErrorMsg () {
     this.errorMsgs.forEach(({ target, errorMsgEl }) => {
       target.appendChild(errorMsgEl);
       // errorMsgEl.parentNode.appendChild(errorMsgEl);
     });
 
     return this;
-  };
+  }
 
-  removeErrorMsgAll = () => {
+  removeErrorMsgAll () {
     this.errorMsgs.forEach(({ target, errorMsgEl }) => {
       target.removeChild(errorMsgEl);
     });
 
     return this;
-  };
+  }
 
-  _findTargetToAppendErrorMsg = (name) => {
+  _findTargetToAppendErrorMsg (name) {
     return this.targetsToAppendErrorMsg
       .filter(({ name: _name }) => _name === name)
       .map(({ targetEl }) => targetEl);
-  };
+  }
 
   _createElement = (tagName) => document.createElement(tagName);
 
-  _setAttributes = (el, attributes) => {
+  _setAttributes (el, attributes) {
     for (let prop in attributes) {
       if (attributes.hasOwnProperty(prop)) {
         el[prop] = attributes[prop];
       }
     }
-  };
+  }
 
-  _setStyles = (el, styles) => {
+  _setStyles (el, styles) {
     for (let prop in styles) {
       if (styles.hasOwnProperty(prop)) {
         el.styles[prop] = styles[prop];
       }
     }
-  };
+  }
 
-  _defaultTemplate = () => {
+  _defaultTemplate () {
     const el = document.createElement("span");
 
     el.setAttribute("class", "error-msg");
 
     return el;
-  };
+  }
 }
 
 export default FormErrorMsg;

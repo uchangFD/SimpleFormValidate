@@ -25,7 +25,7 @@ class FormState {
     this.init();
   }
 
-  init = () => {
+  init () {
     const self = this;
 
     self.elementsForValidation = Array.from(self.formEl.querySelectorAll("[name]")).map(
@@ -42,7 +42,7 @@ class FormState {
         };
       },
     );
-  };
+  }
 
   addValidationToElement = getValidatedMethod(["string"], ["string"])(function(
     name,
