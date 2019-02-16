@@ -18,7 +18,7 @@ class FormState {
 
   addValidationToElement(name, validationTypes) {
     assertType(name, 'name', 'string');
-    assertType(validationTypes, 'validationTypes', 'string');
+    assertType(validationTypes, 'validationTypes', 'array');
 
     const { elements } = this;
     const [elementInfo] = elements.filter(({ name: _name }) => _name === name);
