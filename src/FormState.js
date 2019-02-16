@@ -10,7 +10,7 @@ class FormState {
     }
 
     this.formEl = form;
-    this.elements = getElements(form);
+    this.infos = getInfos(form);
     this.validationTypes = {};
   }
 
@@ -18,13 +18,13 @@ class FormState {
     assertType(name, 'name', 'string');
     assertType(validationTypes, 'validationTypes', 'array');
 
-    const el = this.elements.find(el => el.name === name);
+    const info = this.infos.find(info => info.name === name);
 
-    if (!el) {
+    if (!info) {
       throw new TypeError(`[addValidation] ${name}은 존재하지 않는 name 속성값입니다.`);
     }
 
-    el.validationTypes.push(...validationTypes);
+    info.validationTypes.push(...validationTypes);
   }
 
   addValidationTypes(type, checker, errorMsg) {
@@ -42,30 +42,22 @@ class FormState {
     });
   }
 
+  // result => 유효성 검사 통과하지 않은 element의 정보를 반환시켜야함.
+  // 1. element의 값을 가지고 오고
+  // 2. 유효성 검사하고
+  // 3. 실패한 정보 반환(el, name, errorMsg, validationType)
   validate() {
-    const { elements } = this;
-
-    // result => 유효성 검사 통과하지 않은 element의 정보를 반환시켜야함.
-    // 1. element의 값을 가지고 오고
-    // 2. 유효성 검사하고
-    // 3. 실패한 정보 반환(el, name, errorMsg, validationType)
-    return elements.reduce((result, { el, name, validationTypes }) => {
-      if (validationTypes.length === 0) {
-        return result;
-      }
-
-      const value = el.value;
-      const validatedInfo = this._getValidatedInfo(validationTypes, value);
-
-      result.push({
-        el,
-        name,
-        result: validatedInfo,
-        isValid: validatedInfo.some(({ isValid }) => isValid),
+    return this.infos
+      .filter(info => info.validatedInfo.length > 0)
+      .map(({ el, name, validationTypes }) => {
+        const validatedInfo = this._getValidatedInfo(validationTypes, el.value);
+        return {
+          el,
+          name,
+          result: validatedInfo,
+          isValid: validatedInfo.some(({ isValid }) => isValid),
+        };
       });
-
-      return result;
-    }, []);
   }
 
   removeValidationTypes (type) {
@@ -82,7 +74,7 @@ class FormState {
   removeValidationToElement(name) {
     assertType(name, 'name', 'string');
 
-    this.elements = this.elements.filter(
+    this.infos = this.infos.filter(
       ({ name: _name }) => _name !== name,
     );
   }
@@ -121,7 +113,7 @@ class FormState {
 
 export default FormState;
 
-function getElements(form) {
+function getInfos(form) {
   return Array.from(form)
     .map(el => {
       const name = el.name;
