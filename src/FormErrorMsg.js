@@ -1,4 +1,4 @@
-import { compareType, getValidatedMethod } from "./utils";
+import { compareType, assertType } from "./utils";
 
 class FormErrorMsg {
   errorMsgs = [];
@@ -9,23 +9,21 @@ class FormErrorMsg {
     this.errorMsgTemplate = this._defaultTemplate();
   }
 
-  setErrorMsgTemplate = getValidatedMethod(["string"], "all", "all")(function(
-    tagName,
-    attributes,
-    styles,
-  ) {
+  setErrorMsgTemplate(tagName, attributes, styles) {
+    assertType(tagName, 'tagName', 'string');
+
     const element = this._createElement(tagName);
 
     this._setAttributes(element, attributes);
     this._setStyles(element, styles);
 
     this.errorMsgTemplate = element;
-  });
+  }
 
-  setTargetToAppendErrorMsg = getValidatedMethod(["string"], ["string", "element"])(function(
-    name,
-    target,
-  ) {
+  setTargetToAppendErrorMsg (name, target) {
+    assertType(name, 'name', 'string');
+    assertType(target, 'target', ['string', 'element']);
+
     // if (!this.elementsForValidation.some(({ name: _name }) => _name === name)) {
     //   console.error(`addTarget으로 추가된 ${name}이 없습니다.`);
     //   return false;
@@ -51,7 +49,7 @@ class FormErrorMsg {
       name,
       targetEl,
     });
-  });
+  }
 
   makeErrorMsg (validatedInfos) {
     const errorMsgTemplate = this.errorMsgTemplate;

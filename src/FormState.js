@@ -1,4 +1,4 @@
-import { compareType, getValidatedMethod } from "./utils";
+import { compareType, assertType } from "./utils";
 
 class FormState {
   constructor(form) {
@@ -16,11 +16,9 @@ class FormState {
     this.validationTypes = {};
   }
 
-  addValidationToElement = getValidatedMethod(["string"], ["string"])(function(
-    name,
-    validationTypes,
-  ) {
-    // params [name, validation[ Array['String'] ]]
+  addValidationToElement(name, validationTypes) {
+    assertType(name, 'name', 'string');
+    assertType(validationTypes, 'validationTypes', 'string');
 
     const { elements } = this;
     const [elementInfo] = elements.filter(({ name: _name }) => _name === name);
@@ -30,13 +28,13 @@ class FormState {
     }
 
     elementInfo.validationTypes = elementInfo.validationTypes.concat(validationTypes);
-  });
+  }
 
-  addValidationTypes = getValidatedMethod(["string"], ["function", "regexp"], ["string"])(function(
-    type,
-    checker,
-    errorMsg,
-  ) {
+  addValidationTypes(type, checker, errorMsg) {
+    assertType(type, 'type', 'string');
+    assertType(checker, 'checker', ['function', 'regexp']);
+    assertType(errorMsg, 'errorMsg', 'string');
+
     if (!this.validationTypes[type]) {
       this.validationTypes[type] = [];
     }
@@ -45,9 +43,9 @@ class FormState {
       checker,
       errorMsg,
     });
-  });
+  }
 
-  validate = function() {
+  validate() {
     const { elements } = this;
 
     // result => 유효성 검사 통과하지 않은 element의 정보를 반환시켜야함.
@@ -71,24 +69,28 @@ class FormState {
 
       return result;
     }, []);
-  };
+  }
 
-  removeValidationTypes = getValidatedMethod(["string"])(function(type) {
+  removeValidationTypes (type) {
+    assertType(type, 'type', 'string');
+
     if (!this.validationTypes[type]) {
       console.error(`[removeValidation] ${type}은 정의되지 않은 validation type입니다.`);
       return false;
     }
 
     this.validationTypes[type] = undefined;
-  });
+  }
 
-  removeValidationToElement = getValidatedMethod(["string"])(function(name) {
+  removeValidationToElement(name) {
+    assertType(name, 'name', 'string');
+
     this.elements = this.elements.filter(
       ({ name: _name }) => _name !== name,
     );
-  });
+  }
 
-  _getInvalidInfo = (type, value) => {
+  _getInvalidInfo(type, value) {
     if (!this.validationTypes[type]) {
       console.error(`${type}에 대한 validation이 정의되지 않았습니다.`);
       return [];
@@ -109,7 +111,7 @@ class FormState {
 
       return invalids;
     }, []);
-  };
+  }
 
   _getValidatedInfo = (validationTypes, value) => {
     return validationTypes.reduce((validatedInfo, type) => {
