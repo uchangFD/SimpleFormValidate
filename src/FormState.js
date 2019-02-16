@@ -2,9 +2,7 @@ import { compareType, assertType } from "./utils";
 
 class FormState {
   constructor(form) {
-    if (!compareType(form, "element") && !compareType(form, "string")) {
-      throw new TypeError(`${form}은 string or element 타입이 아닙니다.`);
-    }
+    assertType(form, 'form', ['element', 'string']);
 
     if (compareType(form, "string")) {
       form = document.querySelector(form);
