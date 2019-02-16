@@ -48,7 +48,7 @@ class FormState {
   // 3. 실패한 정보 반환(el, name, errorMsg, validationType)
   validate() {
     return this.infos
-      .filter(info => info.validatedInfo.length > 0)
+      .filter(info => info.validationTypes.length > 0)
       .map(({ el, name, validationTypes }) => {
         const validatedInfo = this._getValidatedInfo(validationTypes, el.value);
         return {
@@ -79,36 +79,21 @@ class FormState {
     );
   }
 
-  _getInvalidInfo(type, value) {
-    if (!this.validationTypes[type]) {
-      console.error(`${type}에 대한 validation이 정의되지 않았습니다.`);
-      return [];
-    }
-    return this.validationTypes[type].reduce((invalids, { checker, errorMsg }) => {
-      let isValid;
-
-      if (compareType(checker, "function")) {
-        isValid = checker(value);
-      } else {
-        isValid = checker.test(value);
-      }
-
-      invalids.push({
-        isValid,
+  _getInvalidInfo=(type, value) => {
+    return (this.validationTypes[type] || []).map(({ checker, errorMsg }) => {
+      return {
+        isValid: compareType(checker, "function") ? checker(value) : checker.test(value),
         errorMsg,
-      });
-
-      return invalids;
-    }, []);
+      };
+    });
   }
 
-  _getValidatedInfo = (validationTypes, value) => {
+  _getValidatedInfo (validationTypes, value) {
     return validationTypes.reduce((validatedInfo, type) => {
       validatedInfo = validatedInfo.concat(this._getInvalidInfo(type, value));
-
       return validatedInfo;
     }, []);
-  };
+  }
 }
 
 export default FormState;
