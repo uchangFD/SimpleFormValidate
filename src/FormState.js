@@ -62,13 +62,7 @@ class FormState {
 
   removeValidationTypes (type) {
     assertType(type, 'type', 'string');
-
-    if (!this.validationTypes[type]) {
-      console.error(`[removeValidation] ${type}은 정의되지 않은 validation type입니다.`);
-      return false;
-    }
-
-    this.validationTypes[type] = undefined;
+    if (!this.validationTypes[type]) delete this.validationTypes[type];
   }
 
   removeValidationToElement(name) {
