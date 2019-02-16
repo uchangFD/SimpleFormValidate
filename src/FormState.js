@@ -50,12 +50,12 @@ class FormState {
     return this.infos
       .filter(info => info.validationTypes.length > 0)
       .map(({ el, name, validationTypes }) => {
-        const validatedInfo = this._getValidatedInfo(validationTypes, el.value);
+        const result = this._validateItem(validationTypes, el.value);
         return {
           el,
           name,
-          result: validatedInfo,
-          isValid: validatedInfo.some(({ isValid }) => isValid),
+          result,
+          isValid: result.some(({ isValid }) => isValid),
         };
       });
   }
@@ -79,19 +79,15 @@ class FormState {
     );
   }
 
-  _getInvalidInfo=(type, value) => {
-    return (this.validationTypes[type] || []).map(({ checker, errorMsg }) => {
-      return {
-        isValid: compareType(checker, "function") ? checker(value) : checker.test(value),
-        errorMsg,
-      };
-    });
-  }
-
-  _getValidatedInfo (validationTypes, value) {
-    return validationTypes.reduce((validatedInfo, type) => {
-      validatedInfo = validatedInfo.concat(this._getInvalidInfo(type, value));
-      return validatedInfo;
+  _validateItem (types, value) {
+    return types.reduce((result, type) => {
+      const infos = (this.validationTypes[type] || []).map(({ checker, errorMsg }) => {
+        return {
+          isValid: compareType(checker, "function") ? checker(value) : checker.test(value),
+          errorMsg,
+        };
+      });
+      return [...result, ...infos];
     }, []);
   }
 }
