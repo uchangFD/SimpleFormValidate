@@ -20,14 +20,13 @@ class FormState {
     assertType(name, 'name', 'string');
     assertType(validationTypes, 'validationTypes', 'array');
 
-    const { elements } = this;
-    const [elementInfo] = elements.filter(({ name: _name }) => _name === name);
+    const el = this.elements.find(el => el.name === name);
 
-    if (!elementInfo) {
-      console.error(`[addValidation] ${name}은 존재하지 않는 name 속성값입니다.`);
+    if (!el) {
+      throw new TypeError(`[addValidation] ${name}은 존재하지 않는 name 속성값입니다.`);
     }
 
-    elementInfo.validationTypes = elementInfo.validationTypes.concat(validationTypes);
+    el.validationTypes.push(...validationTypes);
   }
 
   addValidationTypes(type, checker, errorMsg) {
