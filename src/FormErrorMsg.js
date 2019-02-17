@@ -64,6 +64,13 @@ class FormErrorMsg {
 
     return this;
   }
+
+  display(infos) {
+    this.formErrorMsg
+      .removeErrorMsgAll()
+      .makeErrorMsg(infos)
+      .appendErrorMsg();
+  }
 }
 
 export default FormErrorMsg;

@@ -43,11 +43,7 @@ class FormValidator {
 
   validate () {
     const validatedInfos = this.formState.validate();
-
-    this.formErrorMsg
-      .removeErrorMsgAll()
-      .makeErrorMsg(validatedInfos)
-      .appendErrorMsg();
+    this.formErrorMsg.display(validatedInfos);
     return validatedInfos;
   }
 }
