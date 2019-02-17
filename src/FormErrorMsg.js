@@ -34,26 +34,20 @@ class FormErrorMsg {
   makeErrorMsg (validatedInfos) {
     const errorMsgTemplate = this.template;
 
-    this.messages = validatedInfos.reduce((_errorMsgs, {
-      isValid, el, name, result,
-    }) => {
-      if (isValid || result.length === 0) {
-        return _errorMsgs;
-      }
+    this.messages = validatedInfos
+      .filter(({ isValid }) => !isValid)
+      .map(({ el, name, result }) => {
+        const cloneErrorMsgTemplate = errorMsgTemplate.cloneNode(true);
+        const invalidInfos = result.filter(r => !r.isValid);
+        const target = this._findTargetToAppendErrorMsg(name);
 
-      const cloneErrorMsgTemplate = errorMsgTemplate.cloneNode(true);
-      const invalidInfos = result.filter(({ isValid: _isValid }) => !_isValid);
-      const target = this._findTargetToAppendErrorMsg(name);
+        cloneErrorMsgTemplate.innerText = invalidInfos[0].errorMsg;
 
-      cloneErrorMsgTemplate.innerText = invalidInfos[0].errorMsg;
-
-      _errorMsgs.push({
-        target: target.length === 0 ? el.parentNode : target[0],
-        errorMsgEl: cloneErrorMsgTemplate,
+        return ({
+          target: target.length === 0 ? el.parentNode : target[0],
+          errorMsgEl: cloneErrorMsgTemplate,
+        });
       });
-
-      return _errorMsgs;
-    }, []);
 
     return this;
   }
