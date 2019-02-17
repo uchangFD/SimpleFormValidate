@@ -43,8 +43,9 @@ class FormErrorMsg {
 
     this.messages = infos
       .filter(info => !info.isValid)
-      .map(info => this.makeErrorMsg(info))
-      .forEach(({ target, errorMsgEl }) => target.appendChild(errorMsgEl));
+      .map(info => this.makeErrorMsg(info));
+
+    this.messages.forEach(({ target, errorMsgEl }) => target.appendChild(errorMsgEl));
   }
 }
 
