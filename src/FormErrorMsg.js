@@ -6,7 +6,7 @@ class FormErrorMsg {
   targetsToAppendErrorMsg = [];
 
   constructor() {
-    this.errorMsgTemplate = this._defaultTemplate();
+    this.errorMsgTemplate = Object.assign(document.createElement('span'), { className: 'error-msg' });
   }
 
   setErrorMsgTemplate(tagName, attributes, styles) {
@@ -117,14 +117,6 @@ class FormErrorMsg {
         el.styles[prop] = styles[prop];
       }
     }
-  }
-
-  _defaultTemplate () {
-    const el = document.createElement("span");
-
-    el.setAttribute("class", "error-msg");
-
-    return el;
   }
 }
 
