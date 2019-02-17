@@ -9,15 +9,9 @@ class FormErrorMsg {
     this.errorMsgTemplate = Object.assign(document.createElement('span'), { className: 'error-msg' });
   }
 
-  setErrorMsgTemplate(tagName, attributes, styles) {
+  setErrorMsgTemplate(tagName, attrs, style) {
     assertType(tagName, 'tagName', 'string');
-
-    const element = this._createElement(tagName);
-
-    this._setAttributes(element, attributes);
-    this._setStyles(element, styles);
-
-    this.errorMsgTemplate = element;
+    this.errorMsgTemplate = Object.assign(document.createElement(tagName), { style, ...attrs });
   }
 
   setTargetToAppendErrorMsg (name, target) {
@@ -99,24 +93,6 @@ class FormErrorMsg {
     return this.targetsToAppendErrorMsg
       .filter(({ name: _name }) => _name === name)
       .map(({ targetEl }) => targetEl);
-  }
-
-  _createElement = (tagName) => document.createElement(tagName);
-
-  _setAttributes (el, attributes) {
-    for (let prop in attributes) {
-      if (attributes.hasOwnProperty(prop)) {
-        el[prop] = attributes[prop];
-      }
-    }
-  }
-
-  _setStyles (el, styles) {
-    for (let prop in styles) {
-      if (styles.hasOwnProperty(prop)) {
-        el.styles[prop] = styles[prop];
-      }
-    }
   }
 }
 
