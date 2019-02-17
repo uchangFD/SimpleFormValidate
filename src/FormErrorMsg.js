@@ -21,26 +21,14 @@ class FormErrorMsg {
     //   return false;
     // }
 
-    let targetEl;
+    if (compareType(target, "string")) target = document.querySelector(target);
 
-    if (compareType(target, "element")) {
-      targetEl = target;
-    } else {
-      targetEl = target.length !== 0 ? document.querySelector(target) : undefined;
+    if (!target) {
+      throw new TypeError(`target 을 찾을 수 없습니다.`);
     }
 
-    if (!targetEl) {
-      console.error(`${target} 을 찾을 수 없습니다.`);
-      return this;
-    }
-
-    this.targets = this.targets.filter(
-      ({ name: _name }) => name !== _name,
-    );
-    this.targets.push({
-      name,
-      targetEl,
-    });
+    this.targets = this.targets.filter(t => name !== t.name);
+    this.targets.push({ name, targetEl: target });
   }
 
   makeErrorMsg (validatedInfos) {
