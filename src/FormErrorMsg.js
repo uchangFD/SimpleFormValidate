@@ -4,7 +4,7 @@ class FormErrorMsg {
   constructor() {
     this.template = Object.assign(document.createElement('span'), { className: 'error-msg' });
     this.messages = [];
-    this.targets = [];
+    this.targets = {};
   }
 
   setErrorMsgTemplate(tagName, attrs, style) {
@@ -27,8 +27,7 @@ class FormErrorMsg {
       throw new TypeError(`target 을 찾을 수 없습니다.`);
     }
 
-    this.targets = this.targets.filter(t => name !== t.name);
-    this.targets.push({ name, targetEl: target });
+    this.targets[name] = target;
   }
 
   makeErrorMsg (validatedInfos) {
@@ -39,14 +38,11 @@ class FormErrorMsg {
       .map(({ el, name, result }) => {
         const cloneErrorMsgTemplate = errorMsgTemplate.cloneNode(true);
         const invalidInfos = result.filter(r => !r.isValid);
-        const target = this._findTargetToAppendErrorMsg(name);
+        const target = this.targets[name] || el.parentNode;
 
         cloneErrorMsgTemplate.innerText = invalidInfos[0].errorMsg;
 
-        return ({
-          target: target.length === 0 ? el.parentNode : target[0],
-          errorMsgEl: cloneErrorMsgTemplate,
-        });
+        return ({ target, errorMsgEl: cloneErrorMsgTemplate });
       });
 
     return this;
@@ -67,12 +63,6 @@ class FormErrorMsg {
     });
 
     return this;
-  }
-
-  _findTargetToAppendErrorMsg (name) {
-    return this.targets
-      .filter(({ name: _name }) => _name === name)
-      .map(({ targetEl }) => targetEl);
   }
 }
 
