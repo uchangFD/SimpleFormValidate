@@ -30,46 +30,21 @@ class FormErrorMsg {
     this.targets[name] = target;
   }
 
-  makeErrorMsg (validatedInfos) {
-    const errorMsgTemplate = this.template;
+  makeErrorMsg ({ el, name, result }) {
+    const target = this.targets[name] || el.parentNode;
+    const errorMsgEl = this.template.cloneNode(true);
+    errorMsgEl.innerText = result.find(r => !r.isValid).errorMsg;
 
-    this.messages = validatedInfos
-      .filter(({ isValid }) => !isValid)
-      .map(({ el, name, result }) => {
-        const cloneErrorMsgTemplate = errorMsgTemplate.cloneNode(true);
-        const invalidInfos = result.filter(r => !r.isValid);
-        const target = this.targets[name] || el.parentNode;
-
-        cloneErrorMsgTemplate.innerText = invalidInfos[0].errorMsg;
-
-        return ({ target, errorMsgEl: cloneErrorMsgTemplate });
-      });
-
-    return this;
-  }
-
-  appendErrorMsg () {
-    this.messages.forEach(({ target, errorMsgEl }) => {
-      target.appendChild(errorMsgEl);
-      // errorMsgEl.parentNode.appendChild(errorMsgEl);
-    });
-
-    return this;
-  }
-
-  removeErrorMsgAll () {
-    this.messages.forEach(({ target, errorMsgEl }) => {
-      target.removeChild(errorMsgEl);
-    });
-
-    return this;
+    return ({ target, errorMsgEl });
   }
 
   display(infos) {
-    this.formErrorMsg
-      .removeErrorMsgAll()
-      .makeErrorMsg(infos)
-      .appendErrorMsg();
+    this.messages.forEach(({ target, errorMsgEl }) => target.removeChild(errorMsgEl));
+
+    this.messages = infos
+      .filter(info => !info.isValid)
+      .map(info => this.makeErrorMsg(info))
+      .forEach(({ target, errorMsgEl }) => target.appendChild(errorMsgEl));
   }
 }
 
