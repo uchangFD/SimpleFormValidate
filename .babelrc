@@ -1,17 +1,5 @@
 {
-  "presets": ["@babel/env"],
   "plugins": [
-    "@babel/plugin-proposal-object-rest-spread",
-    [
-      "@babel/plugin-transform-runtime",
-      {
-        "corejs": false,
-        "helpers": false,
-        "regenerator": false,
-        "useESModules": true
-      }
-    ],
-    "@babel/plugin-transform-async-to-generator",
     "@babel/plugin-proposal-class-properties"
   ]
 }
