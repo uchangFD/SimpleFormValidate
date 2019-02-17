@@ -1,9 +1,17 @@
 import FormState from "./FormState";
 import FormErrorMsg from "./FormErrorMsg";
+import { assertType, compareType } from "./utils";
 
 class FormValidator {
   constructor(form) {
-    this.formState = new FormState(form);
+    assertType(form, 'form', ['element', 'string']);
+
+    if (compareType(form, "string")) {
+      form = document.querySelector(form);
+      if (!form) throw new TypeError(`${form}은 존재하지 않는 element입니다.`);
+    }
+
+    this.formState = FormState.byForm(form);
     this.formErrorMsg = new FormErrorMsg();
   }
 

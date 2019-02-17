@@ -1,17 +1,20 @@
 import { compareType, assertType } from "./utils";
 
 class FormState {
-  constructor(form) {
-    assertType(form, 'form', ['element', 'string']);
-
-    if (compareType(form, "string")) {
-      form = document.querySelector(form);
-      if (!form) throw new TypeError(`${form}은 존재하지 않는 element입니다.`);
-    }
-
-    this.formEl = form;
-    this.infos = getInfos(form);
+  constructor(infos) {
+    this.infos = infos;
     this.validationTypes = {};
+  }
+
+  static byForm(form) {
+    const infos = Array.from(form)
+      .map(el => {
+        return {
+          name: el.name, nodeName: el.nodeName, el, validationTypes: [],
+        };
+      });
+
+    return new FormState(infos);
   }
 
   addValidationToElement(name, validationTypes) {
@@ -87,18 +90,3 @@ class FormState {
 }
 
 export default FormState;
-
-function getInfos(form) {
-  return Array.from(form)
-    .map(el => {
-      const name = el.name;
-      const nodeName = el.nodeName;
-
-      return {
-        name,
-        nodeName,
-        el,
-        validationTypes: [],
-      };
-    });
-}
