@@ -1,17 +1,15 @@
 import { compareType, assertType } from "./utils";
 
 class FormErrorMsg {
-  errorMsgs = [];
-  errorMsgTemplate;
-  targetsToAppendErrorMsg = [];
-
   constructor() {
-    this.errorMsgTemplate = Object.assign(document.createElement('span'), { className: 'error-msg' });
+    this.template = Object.assign(document.createElement('span'), { className: 'error-msg' });
+    this.messages = [];
+    this.targets = [];
   }
 
   setErrorMsgTemplate(tagName, attrs, style) {
     assertType(tagName, 'tagName', 'string');
-    this.errorMsgTemplate = Object.assign(document.createElement(tagName), { style, ...attrs });
+    this.template = Object.assign(document.createElement(tagName), { style, ...attrs });
   }
 
   setTargetToAppendErrorMsg (name, target) {
@@ -36,19 +34,19 @@ class FormErrorMsg {
       return this;
     }
 
-    this.targetsToAppendErrorMsg = this.targetsToAppendErrorMsg.filter(
+    this.targets = this.targets.filter(
       ({ name: _name }) => name !== _name,
     );
-    this.targetsToAppendErrorMsg.push({
+    this.targets.push({
       name,
       targetEl,
     });
   }
 
   makeErrorMsg (validatedInfos) {
-    const errorMsgTemplate = this.errorMsgTemplate;
+    const errorMsgTemplate = this.template;
 
-    this.errorMsgs = validatedInfos.reduce((_errorMsgs, {
+    this.messages = validatedInfos.reduce((_errorMsgs, {
       isValid, el, name, result,
     }) => {
       if (isValid || result.length === 0) {
@@ -73,7 +71,7 @@ class FormErrorMsg {
   }
 
   appendErrorMsg () {
-    this.errorMsgs.forEach(({ target, errorMsgEl }) => {
+    this.messages.forEach(({ target, errorMsgEl }) => {
       target.appendChild(errorMsgEl);
       // errorMsgEl.parentNode.appendChild(errorMsgEl);
     });
@@ -82,7 +80,7 @@ class FormErrorMsg {
   }
 
   removeErrorMsgAll () {
-    this.errorMsgs.forEach(({ target, errorMsgEl }) => {
+    this.messages.forEach(({ target, errorMsgEl }) => {
       target.removeChild(errorMsgEl);
     });
 
@@ -90,7 +88,7 @@ class FormErrorMsg {
   }
 
   _findTargetToAppendErrorMsg (name) {
-    return this.targetsToAppendErrorMsg
+    return this.targets
       .filter(({ name: _name }) => _name === name)
       .map(({ targetEl }) => targetEl);
   }
