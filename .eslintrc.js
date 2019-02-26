@@ -31,5 +31,7 @@ module.exports = {
     "wrap-iife": 0,
     "prefer-arrow-callback": 0,
     "lines-between-class-members": 0,
+    "import/prefer-default-export": 0,
+    "no-param-reassign": 0,
   },
 };
