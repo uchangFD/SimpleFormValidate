@@ -1,6 +1,6 @@
 /**
  *
- * @param {ALL} target
+ * @param {any} target
  * @description 타겟의 타입을 반환.
  * @example getType('string') => string
  * @return String
@@ -13,7 +13,7 @@ export const getType = (target) =>
 
 /**
  *
- * @param {ALL} target
+ * @param {any} target
  * @param {String} type
  * @description 타겟의 타입이 type과 같은지 비교
  * @example compareType([], 'array') => true

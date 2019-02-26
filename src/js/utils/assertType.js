@@ -2,7 +2,7 @@ import { getType } from "./type";
 
 /**
  *
- * @param {ALL} target
+ * @param {any} target
  * @param {String} name
  * @param {String|Array} validationTypes
  * @description 타입 확인
