@@ -33,5 +33,6 @@ module.exports = {
     "lines-between-class-members": 0,
     "import/prefer-default-export": 0,
     "no-param-reassign": 0,
+    "consistent-return": 0,
   },
 };

@@ -11,12 +11,18 @@ import { getType } from "./type";
  *  assertType([], 'validations', 'array')
  * @return void
  */
-export const aseertType = (target, name, validationTypes) => {
+export const assertType = (target, name, validationTypes) => {
   const type = getType(target);
 
   if (!Array.isArray(validationTypes)) {
     validationTypes = [validationTypes];
   }
 
-  if (validationTypes.indexOf(type) === -1) throw Error(`${target} is not the expected ${validationTypes}.`);
+  if (
+    validationTypes.some((validationType) => {
+      return type.indexOf(validationType) === -1;
+    })
+  ) {
+    throw Error(`${name} is not the expected ${validationTypes}.`);
+  }
 };
