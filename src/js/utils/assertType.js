@@ -13,16 +13,20 @@ import { getType } from "./type";
  */
 export const assertType = (target, name, validationTypes) => {
   const type = getType(target);
+  let isValid = false;
 
   if (!Array.isArray(validationTypes)) {
     validationTypes = [validationTypes];
   }
 
-  if (
-    validationTypes.some((validationType) => {
-      return type.indexOf(validationType) === -1;
-    })
-  ) {
+  for (const validationType of validationTypes) {
+    if (type.indexOf(validationType) > -1) {
+      isValid = true;
+      break;
+    }
+  }
+
+  if (!isValid) {
     throw Error(`${name} is not the expected ${validationTypes}.`);
   }
 };

@@ -59,6 +59,30 @@ export const createElement = (tagName) => {
 
 /**
  *
+ * @param {String|Element} target
+ * @description element 찾기
+ * @example
+ *  findElement(SELECTOR);
+ * @return [ELEMENT, undefined]
+ */
+export const findElement = (target) => {
+  assertType(target, "target", ["string", "element"]);
+
+  if (compareType(target, "element")) {
+    return target;
+  }
+
+  target = document.querySelector(target);
+
+  if (typeof target === "undefined") {
+    return;
+  }
+
+  return target;
+};
+
+/**
+ *
  * @param {Object} data
  * @param {Functions} ...fns
  * @description dom helper 함수들을 sequencing하는 함수
@@ -68,7 +92,7 @@ export const createElement = (tagName) => {
  * @return Element
  */
 export const domSequence = (data) => (...fns) => {
-  // assertType(data, "data", "object");
+  assertType(data, "data", "object");
 
   const length = fns.length;
 
@@ -118,6 +142,11 @@ const _getParamsForMethod = (data, fnName) => {
     case "createElement":
       return {
         params: [data.tagName],
+        returnKey: "el",
+      };
+    case "findElement":
+      return {
+        params: [data.target],
         returnKey: "el",
       };
     // case "sequence":
