@@ -1,5 +1,5 @@
 import { assertType } from "./assertType";
-import { compareType } from "./type";
+import { compareType, getType } from "./type";
 
 /**
  *
@@ -60,19 +60,20 @@ export const createElement = (tagName) => {
 /**
  *
  * @param {String|Element} target
+ * @param {String|Element} parent
  * @description element 찾기
  * @example
- *  findElement(SELECTOR);
+ *  findElement(SELECTOR, [SELECTOR|ELEMENT]);
  * @return [ELEMENT, undefined]
  */
-export const findElement = (target) => {
+export const findElement = (target, parent = document) => {
   assertType(target, "target", ["string", "element"]);
 
-  if (compareType(target, "element")) {
+  if (getType(target).indexOf("element") > -1) {
     return target;
   }
 
-  target = document.querySelector(target);
+  target = parent.querySelector(target);
 
   if (typeof target === "undefined") {
     return;
