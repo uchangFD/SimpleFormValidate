@@ -1,8 +1,8 @@
 import test from "ava";
-import States from "../../src/js/FormValidator/States";
+import ErrorMsg from "../../src/js/FormValidator/ErrorMsg";
 import { createElement } from "../../src/js/utils/dom";
 
-const states = new States();
+const states = new ErrorMsg();
 
 test("state._defaultTemplate() 결과가 일치하는가", (t) => {
   const el = states._defaultTemplate();
@@ -36,4 +36,13 @@ test("state.setTargetToAppendErrorMsg() 결과가 일치하는가", (t) => {
   t.is(targetsToAppendErrorMsg.length > 0, true);
   t.is(targetsToAppendErrorMsg.some((info) => info.name === "email"), true);
   t.is(targetsToAppendErrorMsg.some((info) => info.parent.nodeName === "DIV"), true);
+});
+
+test("state.setErrorMsgs() 결과가 일치하는가", (t) => {
+  const arr = [1, 2, 3, 4];
+
+  t.notThrows(() => {
+    states.setErrorMsgs(arr);
+  });
+  t.is(states.errorMsgs.length, 4);
 });

@@ -36,6 +36,12 @@ class ErrorMsgState {
     }
   }
 
+  setErrorMsgs(errorMsgs) {
+    assertType(errorMsgs, "errorMsg", "array");
+
+    this.errorMsgs = errorMsgs.slice();
+  }
+
   _defaultTemplate = () => {
     return domSequence({ tagName: "span", attributes: { className: "error-msg" } })(
       createElement,
