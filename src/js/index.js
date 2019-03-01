@@ -1,6 +1,6 @@
 import FormValidator from "./FormValidator/FormValidator.js";
-import State from "./FormValidator/States";
+import ErrorMsgState from "./FormValidator/ErrorMsgState";
 
 window.FormValidator = FormValidator;
-console.log(State);
-window.State = State;
+console.log(ErrorMsgState);
+window.State = ErrorMsgState;
