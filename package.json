@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
+    "test": "ava",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production"
   },
@@ -18,10 +19,12 @@
     "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.3.1",
+    "ava": "^1.2.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.5",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "browser-env": "^3.2.6",
     "css-loader": "^2.0.2",
     "eslint": "^5.11.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -44,6 +47,18 @@
   },
   "bugs": {
     "url": "https://github.com/uchangFD/boilerplate-with-webpack/issues"
+  },
+  "ava": {
+    "babel": {
+      "testOptions": {
+        "babelrc": false,
+        "configFile": false
+      }
+    },
+    "require": [
+      "@babel/register",
+      "./test/helpers/setup-browser-env.js"
+    ]
   },
   "homepage": "https://github.com/uchangFD/boilerplate-with-webpack#readme",
   "description": ""
