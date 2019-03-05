@@ -37,7 +37,7 @@ const _getResult = (runner) => {
   if (typeof runner === "object" && runner.length > 0) {
     const _sequencer = runner.shift();
     const _data = runner;
-    return _sequencer(..._data);
+    return _sequencer(..._data) || _data;
   }
 };
 
