@@ -5,7 +5,7 @@ test("setStyles 함수 정의시 엘리먼트에 적용되었는가?", (t) => {
   const el = document.createElement("span");
   const testValue = "rgb(255, 255, 0)";
 
-  setStyles(el, { color: testValue });
+  setStyles({ color: testValue }, el);
 
   const styles = window.getComputedStyle(el);
 

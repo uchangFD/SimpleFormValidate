@@ -8,9 +8,9 @@ import { compareType, getType } from "./type";
  * @description element 스타일을 정의.
  * @example
  *  setStyle(document.querySelector(SELECTOR), { color: '#fff' });
- * @return void
+ * @return Element
  */
-export const setStyles = (el, newStyles) => {
+export const setStyles = (newStyles, el) => {
   assertType(el, "el", "element");
   assertType(newStyles, "newStyles", "object");
 
@@ -21,6 +21,8 @@ export const setStyles = (el, newStyles) => {
       styles[prop] = newStyles[prop];
     }
   }
+
+  return el;
 };
 
 /**
@@ -30,9 +32,9 @@ export const setStyles = (el, newStyles) => {
  * @description element 속성을 정의.
  * @example
  *  setAttributes(document.querySelector(SELECTOR), { className: 'boo' });
- * @return void
+ * @return Element
  */
-export const setAttributes = (el, newAttr) => {
+export const setAttributes = (newAttr, el) => {
   assertType(el, "el", "element");
   assertType(newAttr, "newAttr", "object");
 
@@ -41,6 +43,8 @@ export const setAttributes = (el, newAttr) => {
       el[prop] = newAttr[prop];
     }
   }
+
+  return el;
 };
 
 /**
@@ -80,82 +84,4 @@ export const findElement = (target, parent = document) => {
   }
 
   return target;
-};
-
-/**
- *
- * @param {Object} data
- * @param {Functions} ...fns
- * @description dom helper 함수들을 sequencing하는 함수
- * @example
- *  const createDomSequence = domSequence({ tagName, styles, attrs });
- *  const element = createDomSequence(createElement, setStyles, setElements);
- * @return Element
- */
-export const domSequence = (data) => (...fns) => {
-  assertType(data, "data", "object");
-
-  const length = fns.length;
-
-  return fns.reduce(
-    (acc, fn, index) => {
-      if (!compareType(fn, "function")) {
-        return acc;
-      }
-
-      const paramsInfo = _getParamsForMethod(acc, fn.name);
-
-      if (compareType(paramsInfo, "undefined")) {
-        return acc;
-      }
-
-      const { returnKey, params } = paramsInfo;
-      const result = fn(...params);
-
-      if (returnKey !== "void" && !acc.hasOwnProperty(returnKey)) {
-        acc[returnKey] = result;
-      }
-
-      if (length === index + 1) {
-        return acc.el;
-      }
-
-      return acc;
-    },
-    { ...data },
-  );
-};
-
-const _getParamsForMethod = (data, fnName) => {
-  assertType(data, "data", "object");
-
-  switch (fnName) {
-    case "setStyles":
-      return {
-        params: [data.el, data.styles],
-        returnKey: "void",
-      };
-    case "setAttributes":
-      return {
-        params: [data.el, data.attributes],
-        returnKey: "void",
-      };
-    case "createElement":
-      return {
-        params: [data.tagName],
-        returnKey: "el",
-      };
-    case "findElement":
-      return {
-        params: [data.target],
-        returnKey: "el",
-      };
-    // case "sequence":
-    //   return {
-    //     params: [data],
-    //     returnKey: "me",
-    //   };
-    default:
-      return undefined;
-  }
 };

@@ -4,15 +4,6 @@ import { createElement } from "../../src/js/utils/dom";
 
 const states = new ErrorMsg();
 
-test("state._defaultTemplate() 결과가 일치하는가", (t) => {
-  const el = states._defaultTemplate();
-  const nodeName = el.nodeName.toLowerCase();
-  const className = el.className;
-
-  t.is(nodeName, "span");
-  t.is(className, "error-msg");
-});
-
 test("state.setErrorMsgTemplate() 결과가 일치하는가", (t) => {
   const color = "rgb(255, 255, 0)";
   const className = "new-error-msg";

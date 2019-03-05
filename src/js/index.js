@@ -3,4 +3,4 @@ import ErrorMsg from "./FormValidator/ErrorMsg";
 
 window.FormValidator = FormValidator;
 console.log(ErrorMsg);
-window.State = ErrorMsg;
+window.ErrorMsg = ErrorMsg;

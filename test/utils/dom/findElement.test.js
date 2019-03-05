@@ -1,18 +1,14 @@
 import test from "ava";
 import {
-  findElement,
-  createElement,
-  domSequence,
-  setAttributes,
-  setStyles,
+  findElement, createElement, setAttributes, setStyles,
 } from "../../../src/js/utils/dom";
+import sequencer from "../../../src/js/utils/sequencer";
 
-const span = domSequence({
-  tagName: "span",
-  styles: { color: "rgb(255, 255, 0)" },
-  attributes: { className: "content" },
-})(createElement, setAttributes, setStyles);
-
+const span = sequencer.run(
+  [createElement, "span"],
+  [setAttributes, { className: "content" }],
+  [setStyles, { color: "#f00" }],
+);
 document.body.appendChild(span);
 
 test("findElement(ELEMENT)", (t) => {

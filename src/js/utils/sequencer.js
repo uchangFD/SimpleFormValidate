@@ -6,18 +6,18 @@ sequencer.run = (...fns) => {
 
   _fns.forEach((runner, index) => {
     result = _getResult(runner);
-    _fns[index + 1] = _mergeResult(_fns[index + 1], result);
+    _fns[index + 1] = _mergeData(_fns[index + 1], result);
   });
 
   return result;
 };
 
 sequencer.chain = (data) => (...fns) => {
-  fns[0] = _mergeResult(fns[0], data);
+  fns[0] = _mergeData(fns[0], data);
   return sequencer.run(...fns);
 };
 
-const _mergeResult = (target, result) => {
+const _mergeData = (target, result) => {
   if (typeof target === "function") {
     return [target, result];
   }
