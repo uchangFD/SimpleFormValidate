@@ -73,8 +73,14 @@ class Validator {
       validationTypes = [validationTypes];
     }
 
-    elementInfo.validationTypes = elementInfo.validationTypes.concat(validationTypes);
-    this.elementInfosToValidate.push(elementInfo);
+    const duplicatedEl = this.elementInfosToValidate.filter(({ name: _name }) => _name === name);
+
+    if (duplicatedEl.length !== 0) {
+      duplicatedEl[0].validationTypes = duplicatedEl[0].validationTypes.concat(validationTypes);
+    } else {
+      elementInfo.validationTypes = elementInfo.validationTypes.concat(validationTypes);
+      this.elementInfosToValidate.push(elementInfo);
+    }
   }
 
   removeElementToValidate(_name) {
@@ -89,7 +95,7 @@ class Validator {
     return this.elementInfosToValidate.map(({ el, validationTypes }) => {
       const value = el.value;
       const validatedInfos = validationTypes.reduce((acc, validationType) => {
-        if (!validationInfos.hasOwnProperty([validationType])) {
+        if (!validationInfos.hasOwnProperty(validationType)) {
           return acc;
         }
 
@@ -110,6 +116,7 @@ class Validator {
 
       return {
         el,
+        name: el.name,
         results: validatedInfos,
       };
     });

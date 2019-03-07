@@ -23,6 +23,10 @@ class ErrorMsg {
     );
   }
 
+  getErrorMsgTemplate() {
+    return this.errorMsgTemplate;
+  }
+
   setTargetToAppendErrorMsg(name, target) {
     assertType(name, "name", "string");
 
@@ -49,6 +53,30 @@ class ErrorMsg {
     assertType(errorMsgs, "errorMsg", "array");
 
     this.errorMsgs = errorMsgs.slice();
+
+    return this;
+  }
+
+  initErrorMsgs() {
+    this.errorMsgs = [];
+
+    return this;
+  }
+
+  appendErrorMsgs() {
+    const errorMsgs = this.errorMsgs;
+
+    for (const { name, errorMsg } of errorMsgs) {
+      const findParent = this.targetsToAppendErrorMsg.find(({ name: _name }) => name === _name);
+
+      if (findParent) {
+        findParent.parent.appendChild(errorMsg);
+      } else {
+        document.querySelector(`[name=${name}]`).parentNode.appendChild(errorMsg);
+      }
+    }
+
+    return this;
   }
 }
 

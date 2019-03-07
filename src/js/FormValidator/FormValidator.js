@@ -1,55 +1,79 @@
-import FormState from "./FormState.js";
-import FormErrorMsg from "./FormErrorMsg.js";
+import ErrorMsg from "./ErrorMsg";
+import Validator from "./Validator";
 
 class FormValidator {
   constructor(form) {
-    this.formState = new FormState(form);
-    this.formErrorMsg = new FormErrorMsg();
+    this.validator = new Validator(form);
+    this.errorMsg = new ErrorMsg();
   }
 
-  addTarget = (name, validationTypes) => {
-    this.formState.addValidationToElement(name, validationTypes);
+  addTarget(name, validationTypes) {
+    this.validator.addElementToValidate(name, validationTypes);
     return this;
-  };
+  }
 
-  addValidation = (type, checker, errorMsg) => {
-    this.formState.addValidationTypes(type, checker, errorMsg);
+  addValidation(type, matcher, errorMsg) {
+    this.validator.addValidationType(type, matcher, errorMsg);
     return this;
-  };
+  }
 
-  removeTarget = (name) => {
-    this.formState.removeValidationToElement(name);
+  removeTarget(name) {
+    this.validator.removeElementToValidate(name);
     return this;
-  };
+  }
 
-  removeValidation = (type) => {
-    this.formState.removeValidationTypes(type);
+  removeValidation(type) {
+    this.validator.removeValidationType(type);
     return this;
-  };
+  }
 
-  setErrorMsg = (tagName, attributes, styles) => {
-    this.formErrorMsg.setErrorMsgTemplate(tagName, attributes, styles);
+  setErrorMsg(tagName, attributes, styles) {
+    this.errorMsg.setErrorMsgTemplate(tagName, attributes, styles);
     return this;
-  };
+  }
 
-  setErrorMsgPosition = (name, target) => {
-    this.formErrorMsg.setTargetToAppendErrorMsg(name, target);
+  setErrorMsgPosition(name, target) {
+    this.errorMsg.setTargetToAppendErrorMsg(name, target);
     return this;
-  };
+  }
 
-  result = () => {
-    return this.formState.validate();
-  };
+  result() {
+    return this.validator.validate();
+  }
 
-  validate = () => {
-    const validatedInfos = this.formState.validate();
+  validate() {
+    const validatedInfos = this.result();
+    const errorMsgTemplate = this.errorMsg.getErrorMsgTemplate();
 
-    this.formErrorMsg
-      .removeErrorMsgAll()
-      .makeErrorMsg(validatedInfos)
-      .appendErrorMsg();
+    const errorMsgs = validatedInfos.reduce((acc, { name, results }) => {
+      const cloneErrorMsgTemplate = errorMsgTemplate.cloneNode(true);
+
+      for (const { isValid, errorMsg } of results) {
+        if (!isValid) {
+          cloneErrorMsgTemplate.innerText = errorMsg;
+
+          acc.push({
+            name,
+            errorMsg: cloneErrorMsgTemplate,
+          });
+
+          return acc;
+        }
+      }
+
+      return acc;
+    }, []);
+
+    // append errorMsgs;
+    this.errorMsg
+      .initErrorMsgs()
+      .setErrorMsgs(errorMsgs)
+      .appendErrorMsgs();
+
+    console.log(errorMsgs);
+
     return validatedInfos;
-  };
+  }
 }
 
 export default FormValidator;
