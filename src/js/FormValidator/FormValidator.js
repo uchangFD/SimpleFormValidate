@@ -43,6 +43,34 @@ class FormValidator {
 
   validate() {
     const validatedInfos = this.result();
+    const errorMsgTemplate = this.errorMsg.getErrorMsgTemplate();
+
+    const errorMsgs = validatedInfos.reduce((acc, { name, results }) => {
+      const cloneErrorMsgTemplate = errorMsgTemplate.cloneNode(true);
+
+      for (const { isValid, errorMsg } of results) {
+        if (!isValid) {
+          cloneErrorMsgTemplate.innerText = errorMsg;
+
+          acc.push({
+            name,
+            errorMsg: cloneErrorMsgTemplate,
+          });
+
+          return acc;
+        }
+      }
+
+      return acc;
+    }, []);
+
+    // append errorMsgs;
+    this.errorMsg
+      .initErrorMsgs()
+      .setErrorMsgs(errorMsgs)
+      .appendErrorMsgs();
+
+    console.log(errorMsgs);
 
     return validatedInfos;
   }
