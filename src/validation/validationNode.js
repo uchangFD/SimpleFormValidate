@@ -13,22 +13,56 @@ class ValidationNode {
     info && assertType(info, "object") && Object.assign(state, info);
   }
 
-  checkValue(value) {
-    // return result[Object];
+  /**
+   * @description validate value with matcher
+   * @param {any} - value
+   */
+  validate(value) {
+    const { matcher, errorMsg } = this.state;
+    let validatedResult;
+
+    if (getType(matcher) === "function") {
+      validatedResult = matcher(value);
+    } else {
+      validatedResult = matcher.test(value);
+    }
+
+    return {
+      result: validatedResult,
+      errorMsg,
+    };
   }
+  /**
+   * @description set matcher
+   * @param {Function | Regexp} - matcher
+   */
   setMatcher(matcher) {
     assertType(matcher, ["function", "regexp"]);
-    // void
+
+    this.state.matcher = matcher;
   }
+  /**
+   * @description get matcher
+   * @returns matcher
+   */
   getMatcher() {
-    // return matcher
+    return this.state.matcher;
   }
+  /**
+   * @description set Name
+   * @param {String} - name
+   */
   setName(name) {
     assertType(name, "string");
-    // void
+
+    this.state.name = name;
   }
+  /**
+   * @description get matcher
+   * @returns name
+   */
   getName() {
-    // return name
+    return this.state.name;
   }
 }
 
