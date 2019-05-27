@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "test": "ava",
+    "test": "ava -v",
     "build": "rollup -c ./rollup/rollup.config.js --environment BUILD:production",
     "dev": "rollup -c ./rollup/rollup.config.js --environment BUILD:development -w"
   },
