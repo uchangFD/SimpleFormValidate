@@ -2,13 +2,15 @@ import assertType from "../utils/assertType";
 import getType from "../utils/getType";
 
 class ValidationNode {
-  constructor(info) {
-    // info validation
+  state = {
+    isAsync: false,
+    matcher: undefined,
+    errorMsg: "",
+    name: "",
+  };
 
-    this.isAsync = false;
-    this.matcher;
-    this.errorMsg;
-    this.name;
+  constructor(info) {
+    info && assertType(info, "object") && Object.assign(state, info);
   }
 
   checkValue(value) {
