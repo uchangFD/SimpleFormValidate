@@ -51,7 +51,7 @@
     },
     "require": [
       "@babel/register",
-      "./test/helpers/setup-browser-env.js"
+      "./__test__/browser-env.js"
     ]
   },
   "homepage": "https://github.com/uchangFD/boilerplate-with-webpack#readme",
