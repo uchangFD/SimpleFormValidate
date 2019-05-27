@@ -1,3 +1,6 @@
+import assertType from "../utils/assertType";
+import getType from "../utils/getType";
+
 class ValidationNode {
   constructor(info) {
     // info validation
@@ -12,15 +15,19 @@ class ValidationNode {
     // return result[Object];
   }
   setMatcher(matcher) {
+    assertType(matcher, ["function", "regexp"]);
     // void
   }
   getMatcher() {
     // return matcher
   }
   setName(name) {
+    assertType(name, "string");
     // void
   }
   getName() {
     // return name
   }
 }
+
+export default ValidationNode;
