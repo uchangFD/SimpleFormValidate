@@ -1,26 +1,58 @@
 import test from "ava";
 import ValidationNode from "../../src/validation/validationNode";
 
-test.beforeEach((t) => {
+test.before((t) => {
   t.context.validationNode = new ValidationNode({});
 });
 
-test("validation.setMatcher(Function) => undefined", (t) => {
-  t.is(t.context.validationNode.setMatcher(function() {}), undefined);
+/*
+  validationNode.setMatcher
+*/
+
+test("validationNode.setMatcher(Function) => Not throw Error", (t) => {
+  t.notThrows((t) => t.context.validationNode.setMatcher(function() {}));
 });
 
-test("validation.setMatcher(Regexp) => undefined", (t) => {
-  t.is(t.context.validationNode.setMatcher(/^test/g), undefined);
+test("validationNode.setMatcher(Regexp) => Not throw Error", (t) => {
+  t.notThrows((t) => t.context.validationNode.setMatcher(/^test/g));
 });
 
-test("validation.setMatcher(String) => throw Error", (t) => {
+test("validationNode.setMatcher(String) => throw Error", (t) => {
   t.throws((t) => t.context.validationNode.setMatcher("hello"));
 });
 
-test("validation.setName(String) => undefined", (t) => {
-  t.is(t.context.validationNode.setName("hello"), undefined);
+/*
+  validationNode.setName
+*/
+
+test("validationNode.setName(String) => Not throw Error", (t) => {
+  t.throws((t) => t.context.validationNode.setName("hello"));
 });
 
-test("validation.setName(Number) => throw Error", (t) => {
+test("validationNode.setName(Number) => throw Error", (t) => {
   t.throws((t) => t.context.validationNode.setName(3));
+});
+
+/*
+  validationNode.setErrorMsg
+*/
+
+test("validationNode.setErrorMsg(String) => Not throw Error", (t) => {
+  t.throws((t) => t.context.validationNode.setErrorMsg("hello"));
+});
+
+test("validationNode.setErrorMsg(Number) => throw Error", (t) => {
+  t.throws((t) => t.context.validationNode.setErrorMsg(3));
+});
+
+/*
+  validationNode.setState
+*/
+
+test("validationNode.setState(Object) => Not throw Error", (t) => {
+  t.throws((t) => t.context.validationNode.setState({}));
+});
+
+test("validationNode.setState(Number) => throw Error", (t) => {
+  t.throws((t) => t.context.validationNode.setState(3));
 });

@@ -64,6 +64,36 @@ class ValidationNode {
   getName() {
     return this.state.name;
   }
+  /**
+   * @description set errorMsg
+   * @param {String} - name
+   */
+  setErrorMsg(msg) {
+    assertType(msg, "string");
+
+    this.state.errorMsg = msg;
+  }
+  /**
+   * @description get errorMsg
+   * @returns errorMsg
+   */
+  getErrorMsg() {
+    return this.state.getErrorMsg;
+  }
+
+  /**
+   * @description set state
+   * @param {Object} - info
+   */
+  setState(info) {
+    if (!info) {
+      return;
+    }
+
+    assertType(info, "object");
+
+    Object.assign(this.state, info);
+  }
 }
 
 export default ValidationNode;
