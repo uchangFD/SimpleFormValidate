@@ -1,6 +1,7 @@
 import assertType from "../utils/assertType";
 import getType from "../utils/getType";
 
+// TODO: Hook을 적용해야 하는데 어떻게하지?😕
 class ValidationNode {
   state = {
     isAsync: false,

@@ -1,7 +1,7 @@
 import test from "ava";
 import ValidationNode from "../../src/validation/validationNode";
 
-test.before((t) => {
+test.beforeEach((t) => {
   t.context.validationNode = new ValidationNode({});
 });
 

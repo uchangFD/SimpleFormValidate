@@ -4,7 +4,13 @@ import assertType from "../utils/assertType";
 class Validation {
   nodes = [];
 
+  getNode(name) {
+    assertType(name, "string");
+
+    return this._findNode(name);
+  }
   createNode(info) {
+    // TODO: 빈 validationNode를 만들 것인가 말것인가?😩
     this.nodes.push(new ValidationNode(info));
   }
   removeNode(name) {
@@ -19,18 +25,15 @@ class Validation {
     const node = this._findNode(name);
 
     if (!node) {
+      // TODO: return할 것인가 예외처리 할 것인가?😩
       throw new Error(`Cannot found ${name} node`);
     }
 
     node.setState(info);
   }
   setMatcher(name, isAsync = false) {
+    // TODO: Promise로 감싸는 부분은 체크할 때 하는걸로😁
     assertType(name, "string");
-  }
-  getNode(name) {
-    assertType(name, "string");
-
-    return this._findNode(name);
   }
 
   _findNode(name) {

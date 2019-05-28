@@ -1,7 +1,7 @@
 import test from "ava";
 import Validation from "../../src/validation/validation";
 
-test.before((t) => {
+test.beforeEach((t) => {
   t.context.validation = new Validation();
 });
 
