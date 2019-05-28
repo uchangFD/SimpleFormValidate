@@ -2,7 +2,11 @@ import test from "ava";
 import ValidationNode from "../../src/validation/validationNode";
 
 test.beforeEach((t) => {
-  t.context.validationNode = new ValidationNode({});
+  t.context.validationNode = new ValidationNode({
+    name: "isNumber",
+    matcher: /^[0-9]+$/g,
+    errorMsg: "Not number",
+  });
 });
 
 /*
@@ -32,7 +36,7 @@ test("validationNode.setMatcher(String) => throw Error", (t) => {
 */
 
 test("validationNode.setName(String) => Not throw Error", (t) => {
-  t.throws(() => {
+  t.notThrows(() => {
     t.context.validationNode.setName("hello");
   });
 });
@@ -48,7 +52,7 @@ test("validationNode.setName(Number) => throw Error", (t) => {
 */
 
 test("validationNode.setErrorMsg(String) => Not throw Error", (t) => {
-  t.throws(() => {
+  t.notThrows(() => {
     t.context.validationNode.setErrorMsg("hello");
   });
 });
@@ -64,7 +68,7 @@ test("validationNode.setErrorMsg(Number) => throw Error", (t) => {
 */
 
 test("validationNode.setState(Object) => Not throw Error", (t) => {
-  t.throws(() => {
+  t.notThrows(() => {
     t.context.validationNode.setState({});
   });
 });

@@ -10,20 +10,20 @@ class Validation {
     return this.nodes[name];
   }
   createNode(info) {
-    // TODO: 빈 validationNode를 만들 것인가 말것인가?😩
     assertType(info, "object");
 
     const propertiesThatMustExist = {
-      matcher: (value) => asserType(value, ["function", "regexp"]),
-      errorMsg: (value) => asserType(value, "string"),
-      name: (value) => asserType(value, "string"),
+      matcher: (value) => assertType(value, ["function", "regexp"]),
+      errorMsg: (value) => assertType(value, "string"),
+      name: (value) => assertType(value, "string"),
     };
+    const propertyListOfInfo = Object.entries(info);
 
-    for (let [key, value] of Object.entries(info)) {
+    for (let [key, value] of propertyListOfInfo) {
       const assertPropertyType = propertiesThatMustExist[key];
 
       if (typeof assertPropertyType === "undefined") {
-        throw new Error(`${key} is not property that must exist`);
+        throw new Error(`${key} is not property that will assert`);
       }
 
       assertPropertyType(value);
@@ -32,7 +32,7 @@ class Validation {
     if (this.nodes[info.name]) {
       throw new Error(`Aleady exist ${info.name} node`);
     }
-
+    // TODO: 빈 validationNode를 만들 것인가 말것인가?😩
     this.nodes[info.name] = new ValidationNode(info);
   }
   removeNode(name) {
@@ -51,7 +51,7 @@ class Validation {
       throw new Error(`Cannot found ${name} node`);
     }
 
-    node.setState(info);
+    node.setState(nodeInfo);
   }
   setMatcher(name, isAsync = false) {
     // TODO: Promise로 감싸는 부분은 체크할 때 하는걸로😁
