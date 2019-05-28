@@ -1,11 +1,11 @@
 {
-  "name": "",
+  "name": "form-validator",
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "test": "ava",
-    "start": "webpack-dev-server --mode development --open",
-    "build": "webpack --mode production"
+    "test": "ava -v",
+    "build": "rollup -c ./rollup/rollup.config.js --environment BUILD:production",
+    "dev": "rollup -c ./rollup/rollup.config.js --environment BUILD:development -w"
   },
   "keywords": [],
   "author": "",
@@ -22,23 +22,19 @@
     "ava": "^1.2.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-loader": "^7.1.5",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "browser-env": "^3.2.6",
-    "css-loader": "^2.0.2",
+    "cross-env": "^5.2.0",
     "eslint": "^5.11.0",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.11.1",
-    "file-loader": "^3.0.1",
-    "html-webpack-plugin": "^3.2.0",
-    "node-sass": "^4.11.0",
-    "sass-loader": "^7.1.0",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.28.2",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.14"
+    "rollup": "^1.12.3",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-uglify": "^6.0.2"
   },
   "dependencies": {},
   "repository": {
@@ -57,7 +53,7 @@
     },
     "require": [
       "@babel/register",
-      "./test/helpers/setup-browser-env.js"
+      "./__test__/browser-env.js"
     ]
   },
   "homepage": "https://github.com/uchangFD/boilerplate-with-webpack#readme",
