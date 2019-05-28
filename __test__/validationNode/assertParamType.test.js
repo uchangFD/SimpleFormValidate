@@ -10,15 +10,21 @@ test.beforeEach((t) => {
 */
 
 test("validationNode.setMatcher(Function) => Not throw Error", (t) => {
-  t.notThrows((t) => t.context.validationNode.setMatcher(function() {}));
+  t.notThrows(() => {
+    t.context.validationNode.setMatcher(function() {});
+  });
 });
 
 test("validationNode.setMatcher(Regexp) => Not throw Error", (t) => {
-  t.notThrows((t) => t.context.validationNode.setMatcher(/^test/g));
+  t.notThrows(() => {
+    t.context.validationNode.setMatcher(/^test/g);
+  });
 });
 
 test("validationNode.setMatcher(String) => throw Error", (t) => {
-  t.throws((t) => t.context.validationNode.setMatcher("hello"));
+  t.throws(() => {
+    t.context.validationNode.setMatcher("hello");
+  });
 });
 
 /*
@@ -26,11 +32,15 @@ test("validationNode.setMatcher(String) => throw Error", (t) => {
 */
 
 test("validationNode.setName(String) => Not throw Error", (t) => {
-  t.throws((t) => t.context.validationNode.setName("hello"));
+  t.throws(() => {
+    t.context.validationNode.setName("hello");
+  });
 });
 
 test("validationNode.setName(Number) => throw Error", (t) => {
-  t.throws((t) => t.context.validationNode.setName(3));
+  t.throws(() => {
+    t.context.validationNode.setName(3);
+  });
 });
 
 /*
@@ -38,11 +48,15 @@ test("validationNode.setName(Number) => throw Error", (t) => {
 */
 
 test("validationNode.setErrorMsg(String) => Not throw Error", (t) => {
-  t.throws((t) => t.context.validationNode.setErrorMsg("hello"));
+  t.throws(() => {
+    t.context.validationNode.setErrorMsg("hello");
+  });
 });
 
 test("validationNode.setErrorMsg(Number) => throw Error", (t) => {
-  t.throws((t) => t.context.validationNode.setErrorMsg(3));
+  t.throws(() => {
+    t.context.validationNode.setErrorMsg(3);
+  });
 });
 
 /*
@@ -50,9 +64,13 @@ test("validationNode.setErrorMsg(Number) => throw Error", (t) => {
 */
 
 test("validationNode.setState(Object) => Not throw Error", (t) => {
-  t.throws((t) => t.context.validationNode.setState({}));
+  t.throws(() => {
+    t.context.validationNode.setState({});
+  });
 });
 
 test("validationNode.setState(Number) => throw Error", (t) => {
-  t.throws((t) => t.context.validationNode.setState(3));
+  t.throws(() => {
+    t.context.validationNode.setState(3);
+  });
 });

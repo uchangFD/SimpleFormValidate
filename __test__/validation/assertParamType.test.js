@@ -9,41 +9,59 @@ test.beforeEach((t) => {
   validation.removeNode
 */
 test("removeNode(string) => Not throw Error", (t) => {
-  t.notThrows((t) => t.context.validation.removeNode("isString"));
+  t.notThrows(() => {
+    t.context.validation.removeNode("isString");
+  });
 });
 test("removeNode(Array) => throw Error", (t) => {
-  t.throws((t) => t.context.validation.removeNode([]));
+  t.throws(() => {
+    t.context.validation.removeNode([]);
+  });
 });
 
 /*
   validation.updateNode
 */
 test("updateNode(string, object) => Not throw Error", (t) => {
-  t.notThrows((t) => t.context.validation.updateNode("isString", {}));
+  t.notThrows(() => {
+    t.context.validation.updateNode("isString", {});
+  });
 });
 test("updateNode(string) => Not throw Error", (t) => {
-  t.notThrows((t) => t.context.validation.updateNode("isString"));
+  t.notThrows(() => {
+    t.context.validation.updateNode("isString");
+  });
 });
 test("updateNode(string, array) => throw Error", (t) => {
-  t.throws((t) => t.context.validation.updateNode("isString", []));
+  t.throws(() => {
+    t.context.validation.updateNode("isString", []);
+  });
 });
 
 /*
   validation.getNode
 */
 test("getNode(string) => Not throw Error", (t) => {
-  t.notThrows((t) => t.context.validation.getNode("isString", {}));
+  t.notThrows(() => {
+    t.context.validation.getNode("isString", {});
+  });
 });
 test("getNode(array) => throw Error", (t) => {
-  t.throws((t) => t.context.validation.getNode([]));
+  t.throws(() => {
+    t.context.validation.getNode([]);
+  });
 });
 
 /*
   validation.setMatcher
 */
 test("setMatcher(string, Boolean) => Not throw Error", (t) => {
-  t.notThrows((t) => t.context.validation.setMatcher("isString", false));
+  t.notThrows(() => {
+    t.context.validation.setMatcher("isString", false);
+  });
 });
 test("setMatcher(number) => throw Error", (t) => {
-  t.throws((t) => t.context.validation.setMatcher(3));
+  t.throws(() => {
+    t.context.validation.setMatcher(3);
+  });
 });
