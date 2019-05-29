@@ -4,42 +4,58 @@ import assertType from "../utils/assertType";
 class Validation {
   nodes = {};
 
+  /**
+   * @description get node
+   * @param {String} - name
+   */
   getNode(name) {
     assertType(name, "string");
 
     return this.nodes[name];
   }
+  /**
+   * @description create node
+   * @param {Object} - info
+   */
   createNode(info) {
     assertType(info, "object");
+
+    if (!info.hasOwnProperty("name") || !info.hasOwnProperty("errorMsg") || !info.hasOwnProperty("matcher")) {
+      throw new Error(`Must need name, errorMsg, name, matcher property`);
+    }
 
     const propertiesThatMustExist = {
       matcher: (value) => assertType(value, ["function", "regexp"]),
       errorMsg: (value) => assertType(value, "string"),
       name: (value) => assertType(value, "string"),
     };
-    const propertyListOfInfo = Object.entries(info);
 
-    for (let [key, value] of propertyListOfInfo) {
-      const assertPropertyType = propertiesThatMustExist[key];
+    for (let [key, value] of Object.entries(info)) {
+      const assertPropertyValue = propertiesThatMustExist[key];
 
-      if (typeof assertPropertyType === "undefined") {
-        throw new Error(`${key} is not property that will assert`);
-      }
-
-      assertPropertyType(value);
+      assertPropertyValue && assertPropertyValue(value);
     }
 
     if (this.nodes[info.name]) {
       throw new Error(`Aleady exist ${info.name} node`);
     }
-    // TODO: 빈 validationNode를 만들 것인가 말것인가?😩
+
     this.nodes[info.name] = new ValidationNode(info);
   }
+  /**
+   * @description remove node
+   * @param {String} - name
+   */
   removeNode(name) {
     assertType(name, "string");
 
     this.nodes[name] && delete this.nodes[name];
   }
+  /**
+   * @description update node
+   * @param {String} - name
+   * @param {Object} - nodeInfo
+   */
   updateNode(name, nodeInfo) {
     assertType(name, "string");
     nodeInfo && assertType(nodeInfo, "object");
@@ -53,6 +69,11 @@ class Validation {
 
     node.setState(nodeInfo);
   }
+  /**
+   * @description set Matcher
+   * @param {String} - name
+   * @param {Boolean} - isAsync
+   */
   setMatcher(name, isAsync = false) {
     // TODO: Promise로 감싸는 부분은 체크할 때 하는걸로😁
     assertType(name, "string");
