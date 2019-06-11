@@ -1,4 +1,5 @@
-import babel from 'rollup-plugin-babel';
+// import babel from 'rollup-plugin-babel';
+import typescript from 'rollup-plugin-typescript';
 import paths from './paths';
 
 import production from './rollup.config.prod';
@@ -11,9 +12,15 @@ const defaults = {
     format: 'iife',
   },
   plugins: [
-    babel({
-      exclude: 'node_modules/**'
-    })
+    // babel({
+    //   exclude: 'node_modules/**'
+    // }),
+    typescript(
+      {
+        lib: ["es5", "es6", "dom"], 
+        target: "es5",
+      }
+    )
   ]
 };
 
