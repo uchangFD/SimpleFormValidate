@@ -1,14 +1,14 @@
-import ValidationNode from "./validationNode";
+import validationNode from "./validationNode";
 import assertType from "../utils/assertType";
 
 class Validation {
-  nodes = {};
-
+  nodes;
   /**
    * @description get node
    * @param {String} - name
    */
   getNode(name) {
+    this.nodes = {};
     assertType(name, "string");
 
     return this.nodes[name];
@@ -17,6 +17,7 @@ class Validation {
    * @description create node
    * @param {Object} - info
    */
+
   createNode(info) {
     assertType(info, "object");
 
@@ -30,7 +31,7 @@ class Validation {
       name: (value) => assertType(value, "string"),
     };
 
-    for (let [key, value] of Object.entries(info)) {
+    for (const [key, value] of Object.entries(info)) {
       const assertPropertyValue = propertiesThatMustExist[key];
 
       assertPropertyValue && assertPropertyValue(value);

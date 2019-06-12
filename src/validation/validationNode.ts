@@ -3,15 +3,15 @@ import getType from "../utils/getType";
 
 // TODO: Hook을 적용해야 하는데 어떻게하지?😕
 class ValidationNode {
-  state = {
-    isAsync: false,
-    matcher: undefined,
-    errorMsg: "",
-    name: "",
-  };
-
+  state;
   constructor(info) {
-    info && assertType(info, "object") && Object.assign(state, info);
+    this.state = {
+      isAsync: false,
+      matcher: undefined,
+      errorMsg: "",
+      name: "",
+    };
+    info && assertType(info, "object") && Object.assign(this.state, info);
   }
 
   /**

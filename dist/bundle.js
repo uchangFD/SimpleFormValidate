@@ -41,104 +41,15 @@
     }
   };
 
-  // TODO: Hook을 적용해야 하는데 어떻게하지?😕
-  var ValidationNode = /** @class */ (function () {
-      function ValidationNode(info) {
-          this.state = {
-              isAsync: false,
-              matcher: undefined,
-              errorMsg: "",
-              name: "",
-          };
-          info && assertType(info, "object") && Object.assign(state, info);
-      }
-      /**
-       * @description validate value with matcher
-       * @param {any} - value
-       */
-      ValidationNode.prototype.validate = function (value) {
-          var _a = this.state, matcher = _a.matcher, errorMsg = _a.errorMsg;
-          var validatedResult;
-          if (getType(matcher) === "function") {
-              validatedResult = matcher(value);
-          }
-          else {
-              validatedResult = matcher.test(value);
-          }
-          return {
-              result: validatedResult,
-              errorMsg: errorMsg,
-          };
-      };
-      /**
-       * @description set matcher
-       * @param {Function | Regexp} - matcher
-       */
-      ValidationNode.prototype.setMatcher = function (matcher) {
-          assertType(matcher, ["function", "regexp"]);
-          this.state.matcher = matcher;
-      };
-      /**
-       * @description get matcher
-       * @returns matcher
-       */
-      ValidationNode.prototype.getMatcher = function () {
-          return this.state.matcher;
-      };
-      /**
-       * @description set Name
-       * @param {String} - name
-       */
-      ValidationNode.prototype.setName = function (name) {
-          assertType(name, "string");
-          this.state.name = name;
-      };
-      /**
-       * @description get matcher
-       * @returns name
-       */
-      ValidationNode.prototype.getName = function () {
-          return this.state.name;
-      };
-      /**
-       * @description set errorMsg
-       * @param {String} - name
-       */
-      ValidationNode.prototype.setErrorMsg = function (msg) {
-          assertType(msg, "string");
-          this.state.errorMsg = msg;
-      };
-      /**
-       * @description get errorMsg
-       * @returns errorMsg
-       */
-      ValidationNode.prototype.getErrorMsg = function () {
-          return this.state.getErrorMsg;
-      };
-      /**
-       * @description set state
-       * @param {Object} - info
-       */
-      ValidationNode.prototype.setState = function (info) {
-          if (!info) {
-              return;
-          }
-          assertType(info, "object");
-          Object.assign(this.state, info);
-      };
-      return ValidationNode;
-  }());
-  //# sourceMappingURL=validationNode.js.map
-
   var Validation = /** @class */ (function () {
       function Validation() {
-          this.nodes = {};
       }
       /**
        * @description get node
        * @param {String} - name
        */
       Validation.prototype.getNode = function (name) {
+          this.nodes = {};
           assertType(name, "string");
           return this.nodes[name];
       };
@@ -201,14 +112,12 @@
       };
       return Validation;
   }());
-  //# sourceMappingURL=validation.js.map
 
-  var validation = new Validation();
-  validation.createNode({
-      name: 'isNumber',
+  var _validation = new Validation();
+  _validation.createNode({
+      name: "isNumber",
       matcher: /^[0-9]$/g,
-      errorMsg: 'not number'
+      errorMsg: "not number",
   });
-  //# sourceMappingURL=index.js.map
 
 }());
