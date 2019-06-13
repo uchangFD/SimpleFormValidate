@@ -103,6 +103,14 @@
             enumerable: true,
             configurable: true
         });
+        AbstractValidationNode.prototype.getValidatedResult = function (isValid) {
+            if (isValid) {
+                return {
+                    isValid: isValid,
+                };
+            }
+            return { isValid: isValid, errorMsg: this.errorMsg };
+        };
         return AbstractValidationNode;
     }());
     var ValidationNode = /** @class */ (function (_super) {
@@ -112,21 +120,15 @@
         }
         ValidationNode.prototype.validate = function (value) {
             var matcher = this.matcher;
-            var isValid;
-            var result;
             if (typeof matcher === "function") {
-                isValid = matcher(value);
+                return matcher(value);
             }
             else {
-                isValid = matcher.test(value);
+                return matcher.test(value);
             }
-            result = {
-                isValid: isValid,
-            };
-            if (!isValid) {
-                result["errorMsg"] = this.errorMsg;
-            }
-            return result;
+        };
+        ValidationNode.prototype.result = function (value) {
+            return this.getValidatedResult(this.validate(value));
         };
         return ValidationNode;
     }(AbstractValidationNode));
@@ -136,45 +138,40 @@
             return _super !== null && _super.apply(this, arguments) || this;
         }
         ValidationNodeAsync.prototype.validate = function (value) {
-            var _this = this;
-            return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                var matcher, isValid, result, e_1;
+            return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
                 return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            _a.trys.push([0, 4, , 5]);
-                            matcher = this.matcher;
-                            isValid = void 0;
-                            result = void 0;
-                            if (!(typeof matcher === "function")) return [3 /*break*/, 2];
-                            return [4 /*yield*/, matcher(value)];
-                        case 1:
-                            isValid = _a.sent();
-                            return [3 /*break*/, 3];
-                        case 2:
-                            isValid = matcher.test(value);
-                            _a.label = 3;
-                        case 3:
-                            result = {
-                                isValid: isValid,
-                            };
-                            if (!isValid) {
-                                result["errorMsg"] = this.errorMsg;
+                    return [2 /*return*/, new Promise(function (resolve, reject) {
+                            try {
+                                _this.matcher(value, resolve);
                             }
-                            resolve(result);
-                            return [3 /*break*/, 5];
-                        case 4:
-                            e_1 = _a.sent();
-                            reject(e_1);
-                            return [3 /*break*/, 5];
-                        case 5: return [2 /*return*/];
+                            catch (e) {
+                                reject(e);
+                            }
+                        })];
+                });
+            });
+        };
+        ValidationNodeAsync.prototype.result = function (value) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a, e_1;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 2, , 3]);
+                            _a = this.getValidatedResult;
+                            return [4 /*yield*/, this.validate(value)];
+                        case 1: return [2 /*return*/, _a.apply(this, [_b.sent()])];
+                        case 2:
+                            e_1 = _b.sent();
+                            throw new Error(e_1);
+                        case 3: return [2 /*return*/];
                     }
                 });
-            }); });
+            });
         };
         return ValidationNodeAsync;
     }(AbstractValidationNode));
-    //# sourceMappingURL=_validationNode.js.map
 
     // import Validation from "./validation/validation";
     // const _validation = new Validation();
@@ -183,7 +180,13 @@
     //   matcher: /^[0-9]$/g,
     //   errorMsg: "not number",
     // });
+    window.asyncV = new ValidationNodeAsync("isNumber", function (value, resolve) {
+        setTimeout(function () {
+            resolve(/^[0-9]$/g.test(value + ""));
+        }, 3000);
+    }, "no number");
+    window.V = new ValidationNode("isNumber", /^[0-9]$/g, "no number");
     window.ValidationNode = ValidationNode;
-    window.ValidationNodeAsync = ValidationNodeAsync;
+    //# sourceMappingURL=index.js.map
 
 }());

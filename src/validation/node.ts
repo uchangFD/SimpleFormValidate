@@ -38,59 +38,51 @@ export abstract class AbstractValidationNode {
     this._errorMsg = errorMsg;
   }
 
-  abstract validate(value: any): any;
+  protected getValidatedResult(isValid: boolean): IValidatedResult {
+    if (isValid) {
+      return {
+        isValid,
+      };
+    }
+    return { isValid, errorMsg: this.errorMsg };
+  }
+
+  abstract validate(value: any): boolean | Promise<boolean>;
+  abstract result(value: any): IValidatedResult | Promise<object>;
 }
 
 export class ValidationNode extends AbstractValidationNode {
-  validate(value: any) {
+  validate(value) {
     const matcher = this.matcher;
-    let isValid: boolean;
-    let result: IValidatedResult;
 
     if (typeof matcher === "function") {
-      isValid = matcher(value);
+      return matcher(value);
     } else {
-      isValid = matcher.test(value);
+      return matcher.test(value);
     }
+  }
 
-    result = {
-      isValid,
-    };
-
-    if (!isValid) {
-      result["errorMsg"] = this.errorMsg;
-    }
-
-    return result;
+  result(value) {
+    return this.getValidatedResult(this.validate(value));
   }
 }
 
 export class ValidationNodeAsync extends AbstractValidationNode {
-  validate(value: any) {
-    return new Promise(async (resolve, reject) => {
+  async validate(value) {
+    return new Promise<boolean>((resolve, reject) => {
       try {
-        const matcher = this.matcher;
-        let isValid: boolean;
-        let result: IValidatedResult;
-
-        if (typeof matcher === "function") {
-          isValid = await matcher(value);
-        } else {
-          isValid = matcher.test(value);
-        }
-
-        result = {
-          isValid,
-        };
-
-        if (!isValid) {
-          result["errorMsg"] = this.errorMsg;
-        }
-
-        resolve(result);
+        this.matcher(value, resolve);
       } catch (e) {
         reject(e);
       }
     });
+  }
+
+  async result(value) {
+    try {
+      return this.getValidatedResult(await this.validate(value));
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 }

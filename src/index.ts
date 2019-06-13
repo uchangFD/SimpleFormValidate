@@ -1,4 +1,4 @@
-import { ValidationNode, ValidationNodeAsync } from "./validation/_validationNode";
+import { ValidationNode, ValidationNodeAsync } from "./validation/node";
 
 // import Validation from "./validation/validation";
 
@@ -9,5 +9,15 @@ import { ValidationNode, ValidationNodeAsync } from "./validation/_validationNod
 //   errorMsg: "not number",
 // });
 
+window.asyncV = new ValidationNodeAsync(
+  "isNumber",
+  (value: number, resolve) => {
+    setTimeout(() => {
+      resolve(/^[0-9]$/g.test(value + ""));
+    }, 3000);
+  },
+  "no number",
+);
+window.V = new ValidationNode("isNumber", /^[0-9]$/g, "no number");
+
 window.ValidationNode = ValidationNode;
-window.ValidationNodeAsync = ValidationNodeAsync;
