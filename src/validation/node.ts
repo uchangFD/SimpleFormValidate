@@ -68,7 +68,7 @@ export class ValidationNode extends AbstractValidationNode {
 }
 
 export class ValidationNodeAsync extends AbstractValidationNode {
-  async validate(value) {
+  validate(value) {
     return new Promise<boolean>((resolve, reject) => {
       try {
         this.matcher(value, resolve);
