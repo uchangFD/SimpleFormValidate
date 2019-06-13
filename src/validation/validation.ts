@@ -1,4 +1,5 @@
-import validationNode from "./validationNode";
+// import validationNode from "./validationNode";
+import { ValidationNode } from "./_validationNode";
 import assertType from "../utils/assertType";
 
 class Validation {
@@ -41,7 +42,7 @@ class Validation {
       throw new Error(`Aleady exist ${info.name} node`);
     }
 
-    this.nodes[info.name] = new ValidationNode(info);
+    this.nodes[info.name] = new ValidationNode(info.name, info.matcher, info.errorMsg);
   }
   /**
    * @description remove node

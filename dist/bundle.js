@@ -1,123 +1,189 @@
 (function () {
-  'use strict';
+    'use strict';
 
-  /**
-   * get type of target
-   * @param {any} target
-   **/
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
 
-  var getType = (target) =>
-    Object.prototype.toString
-      .call(target)
-      .slice(8, -1)
-      .toLowerCase();
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
 
-  var assertType = (target, expect) => {
-    const expectType = getType(expect);
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
 
-    if (expectType !== "array" && expectType !== "string") {
-      throw new Error(`${expect} is not string or array type`);
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    if (expectType === "array") {
-      expect.forEach((e) => {
-        if (getType(e) !== "string") {
-          throw new Error(`${e} is not string`);
+    function __awaiter(thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
+
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
         }
-      });
     }
 
-    const targetType = getType(target);
-    let result;
+    var AbstractValidationNode = /** @class */ (function () {
+        function AbstractValidationNode(name, matcher, errorMsg) {
+            this.name = name;
+            this.matcher = matcher;
+            this.errorMsg = errorMsg;
+        }
+        Object.defineProperty(AbstractValidationNode.prototype, "matcher", {
+            get: function () {
+                return this._matcher;
+            },
+            set: function (matcher) {
+                this._matcher = matcher;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(AbstractValidationNode.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            set: function (name) {
+                this._name = name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(AbstractValidationNode.prototype, "errorMsg", {
+            get: function () {
+                return this._errorMsg;
+            },
+            set: function (errorMsg) {
+                this._errorMsg = errorMsg;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return AbstractValidationNode;
+    }());
+    var ValidationNode = /** @class */ (function (_super) {
+        __extends(ValidationNode, _super);
+        function ValidationNode() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ValidationNode.prototype.validate = function (value) {
+            var matcher = this.matcher;
+            var isValid;
+            var result;
+            if (typeof matcher === "function") {
+                isValid = matcher(value);
+            }
+            else {
+                isValid = matcher.test(value);
+            }
+            result = {
+                isValid: isValid,
+            };
+            if (!isValid) {
+                result["errorMsg"] = this.errorMsg;
+            }
+            return result;
+        };
+        return ValidationNode;
+    }(AbstractValidationNode));
+    var ValidationNodeAsync = /** @class */ (function (_super) {
+        __extends(ValidationNodeAsync, _super);
+        function ValidationNodeAsync() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ValidationNodeAsync.prototype.validate = function (value) {
+            var _this = this;
+            return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                var matcher, isValid, result, e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 4, , 5]);
+                            matcher = this.matcher;
+                            isValid = void 0;
+                            result = void 0;
+                            if (!(typeof matcher === "function")) return [3 /*break*/, 2];
+                            return [4 /*yield*/, matcher(value)];
+                        case 1:
+                            isValid = _a.sent();
+                            return [3 /*break*/, 3];
+                        case 2:
+                            isValid = matcher.test(value);
+                            _a.label = 3;
+                        case 3:
+                            result = {
+                                isValid: isValid,
+                            };
+                            if (!isValid) {
+                                result["errorMsg"] = this.errorMsg;
+                            }
+                            resolve(result);
+                            return [3 /*break*/, 5];
+                        case 4:
+                            e_1 = _a.sent();
+                            reject(e_1);
+                            return [3 /*break*/, 5];
+                        case 5: return [2 /*return*/];
+                    }
+                });
+            }); });
+        };
+        return ValidationNodeAsync;
+    }(AbstractValidationNode));
+    //# sourceMappingURL=_validationNode.js.map
 
-    if (expectType === "array") {
-      result = expect.some((e) => targetType === e);
-    } else {
-      result = targetType === expect;
-    }
-
-    if (!result) {
-      throw new Error(`The target is different from the expected value. \n target type: ${target}, expect: ${expect}`);
-    }
-  };
-
-  var Validation = /** @class */ (function () {
-      function Validation() {
-      }
-      /**
-       * @description get node
-       * @param {String} - name
-       */
-      Validation.prototype.getNode = function (name) {
-          this.nodes = {};
-          assertType(name, "string");
-          return this.nodes[name];
-      };
-      /**
-       * @description create node
-       * @param {Object} - info
-       */
-      Validation.prototype.createNode = function (info) {
-          assertType(info, "object");
-          if (!info.hasOwnProperty("name") || !info.hasOwnProperty("errorMsg") || !info.hasOwnProperty("matcher")) {
-              throw new Error("Must need name, errorMsg, name, matcher property");
-          }
-          var propertiesThatMustExist = {
-              matcher: function (value) { return assertType(value, ["function", "regexp"]); },
-              errorMsg: function (value) { return assertType(value, "string"); },
-              name: function (value) { return assertType(value, "string"); },
-          };
-          for (var _i = 0, _a = Object.entries(info); _i < _a.length; _i++) {
-              var _b = _a[_i], key = _b[0], value = _b[1];
-              var assertPropertyValue = propertiesThatMustExist[key];
-              assertPropertyValue && assertPropertyValue(value);
-          }
-          if (this.nodes[info.name]) {
-              throw new Error("Aleady exist " + info.name + " node");
-          }
-          this.nodes[info.name] = new ValidationNode(info);
-      };
-      /**
-       * @description remove node
-       * @param {String} - name
-       */
-      Validation.prototype.removeNode = function (name) {
-          assertType(name, "string");
-          this.nodes[name] && delete this.nodes[name];
-      };
-      /**
-       * @description update node
-       * @param {String} - name
-       * @param {Object} - nodeInfo
-       */
-      Validation.prototype.updateNode = function (name, nodeInfo) {
-          assertType(name, "string");
-          nodeInfo && assertType(nodeInfo, "object");
-          var node = this.nodes[name];
-          if (!node) {
-              // TODO: return할 것인가 예외처리 할 것인가?😩
-              throw new Error("Cannot found " + name + " node");
-          }
-          node.setState(nodeInfo);
-      };
-      /**
-       * @description set Matcher
-       * @param {String} - name
-       * @param {Boolean} - isAsync
-       */
-      Validation.prototype.setMatcher = function (name, isAsync) {
-          if (isAsync === void 0) { isAsync = false; }
-          // TODO: Promise로 감싸는 부분은 체크할 때 하는걸로😁
-          assertType(name, "string");
-      };
-      return Validation;
-  }());
-
-  var _validation = new Validation();
-  _validation.createNode({
-      name: "isNumber",
-      matcher: /^[0-9]$/g,
-      errorMsg: "not number",
-  });
+    // import Validation from "./validation/validation";
+    // const _validation = new Validation();
+    // _validation.createNode({
+    //   name: "isNumber",
+    //   matcher: /^[0-9]$/g,
+    //   errorMsg: "not number",
+    // });
+    window.ValidationNode = ValidationNode;
+    window.ValidationNodeAsync = ValidationNodeAsync;
 
 }());
