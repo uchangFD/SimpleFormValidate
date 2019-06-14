@@ -1,31 +1,9 @@
 import Validation from "./validation/";
 
-// import Validation from "./validation/validation";
-
-// const _validation = new Validation();
-// _validation.createNode({
-//   name: "isNumber",
-//   matcher: /^[0-9]$/g,
-//   errorMsg: "not number",
-// });
-
-// window.asyncV = new ValidationNodeAsync(
-//   "isNumber",
-//   (value: number, resolve) => {
-//     setTimeout(() => {
-//       resolve(/^[0-9]$/.test(value + ""));
-//     }, 3000);
-//   },
-//   "no number",
-// );
-// window.V = new ValidationNode("isNumber", /^[0-9]$/, "no number");
-
-// window.ValidationNode = ValidationNode;
-
 const validation = (window.validation = new Validation());
 
 validation.createNode({
-  name: "number",
+  name: "numberAsync",
   matcher: (value, resolve) => {
     setTimeout(() => {
       resolve(/^[0-9]$/.test(value + ""));
@@ -35,10 +13,26 @@ validation.createNode({
   isAsync: true,
 });
 
-async function test() {
-  const result = await validation.getNode("number").result("???");
+validation.createNode({
+  name: "numberSync",
+  matcher: /[0-9]$/g,
+  errorMsg: "no number",
+});
 
-  console.log(result);
+async function testAsync() {
+  const result = await validation.getNode("numberAsync").result("???");
+
+  console.log("async result: ", result);
 }
 
-test();
+function testSync() {
+  // validation.removeNode("numberSync");
+  const node = validation.getNode("numberSync");
+  // validation.updateNode("numberSync", { errorMsg: "no~~~~~~~~~~~~~~~~" });
+  const result = node.result("hi");
+
+  console.log("sync result: ", result);
+}
+
+// testAsync();
+// testSync();

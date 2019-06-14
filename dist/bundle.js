@@ -175,8 +175,8 @@
         }
         Validation.prototype.createNode = function (_a) {
             var name = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg, _b = _a.isAsync, isAsync = _b === void 0 ? false : _b;
-            if (!!this.getNode(name)) {
-                return false;
+            if (!!this._findNode(name)) {
+                throw new Error("Already exist node: " + name);
             }
             if (!isAsync) {
                 this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
@@ -186,49 +186,42 @@
             }
             return true;
         };
-        Validation.prototype.updateNode = function (_a) {
-            var name = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg;
-            var node = this.getNode(name);
+        Validation.prototype.updateNode = function (name, _a) {
+            var _b = _a === void 0 ? {} : _a, _name = _b.name, matcher = _b.matcher, errorMsg = _b.errorMsg;
+            var node = this._findNode(name);
             if (!node) {
-                return;
+                throw new Error(name + " is not exist");
             }
-            name && (node.name = name);
+            _name && (node.name = _name);
             matcher && (node.matcher = matcher);
             errorMsg && (node.errorMsg = errorMsg);
+            return this;
         };
         Validation.prototype.removeNode = function (name) {
-            var node = this.nodes[name];
+            var node = this._findNode(name);
+            if (!node) {
+                throw new Error(name + " is not exist");
+            }
             delete this.nodes[name];
             return node;
         };
         Validation.prototype.getNode = function (name) {
+            var node = this._findNode(name);
+            if (!node) {
+                throw new Error(name + " is not exist");
+            }
+            return node;
+        };
+        Validation.prototype._findNode = function (name) {
             return this.nodes[name];
         };
         return Validation;
     }());
     //# sourceMappingURL=index.js.map
 
-    // import Validation from "./validation/validation";
-    // const _validation = new Validation();
-    // _validation.createNode({
-    //   name: "isNumber",
-    //   matcher: /^[0-9]$/g,
-    //   errorMsg: "not number",
-    // });
-    // window.asyncV = new ValidationNodeAsync(
-    //   "isNumber",
-    //   (value: number, resolve) => {
-    //     setTimeout(() => {
-    //       resolve(/^[0-9]$/.test(value + ""));
-    //     }, 3000);
-    //   },
-    //   "no number",
-    // );
-    // window.V = new ValidationNode("isNumber", /^[0-9]$/, "no number");
-    // window.ValidationNode = ValidationNode;
     var validation = (window.validation = new Validation());
     validation.createNode({
-        name: "number",
+        name: "numberAsync",
         matcher: function (value, resolve) {
             setTimeout(function () {
                 resolve(/^[0-9]$/.test(value + ""));
@@ -237,21 +230,12 @@
         errorMsg: "no number",
         isAsync: true,
     });
-    function test() {
-        return __awaiter(this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, validation.getNode("number").result("???")];
-                    case 1:
-                        result = _a.sent();
-                        console.log(result);
-                        return [2 /*return*/];
-                }
-            });
-        });
-    }
-    test();
-    //# sourceMappingURL=index.js.map
+    validation.createNode({
+        name: "numberSync",
+        matcher: /[0-9]$/g,
+        errorMsg: "no number",
+    });
+    // testAsync();
+    // testSync();
 
 }());
