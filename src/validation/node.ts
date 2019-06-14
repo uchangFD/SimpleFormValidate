@@ -1,4 +1,6 @@
-interface IMatcher {
+import Hooks from "./hooks";
+
+export interface IMatcher {
   matcher: Function | RegExp;
 }
 interface IValidatedResult {
@@ -48,17 +50,15 @@ export abstract class AbstractValidationNode {
   }
 
   abstract validate(value: any): boolean | Promise<boolean>;
-  abstract result(value: any): IValidatedResult | Promise<object>;
+  abstract result(value: any): IValidatedResult | Promise<IValidatedResult>;
 }
 
 export class ValidationNode extends AbstractValidationNode {
   validate(value) {
-    const matcher = this.matcher;
-
-    if (typeof matcher === "function") {
-      return matcher(value);
+    if (typeof this.matcher === "function") {
+      return this.matcher(value);
     } else {
-      return matcher.test(value);
+      return this.matcher.test(value);
     }
   }
 

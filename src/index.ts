@@ -1,4 +1,4 @@
-import { ValidationNode, ValidationNodeAsync } from "./validation/node";
+import Validation from "./validation/";
 
 // import Validation from "./validation/validation";
 
@@ -9,15 +9,36 @@ import { ValidationNode, ValidationNodeAsync } from "./validation/node";
 //   errorMsg: "not number",
 // });
 
-window.asyncV = new ValidationNodeAsync(
-  "isNumber",
-  (value: number, resolve) => {
+// window.asyncV = new ValidationNodeAsync(
+//   "isNumber",
+//   (value: number, resolve) => {
+//     setTimeout(() => {
+//       resolve(/^[0-9]$/.test(value + ""));
+//     }, 3000);
+//   },
+//   "no number",
+// );
+// window.V = new ValidationNode("isNumber", /^[0-9]$/, "no number");
+
+// window.ValidationNode = ValidationNode;
+
+const validation = (window.validation = new Validation());
+
+validation.createNode({
+  name: "number",
+  matcher: (value, resolve) => {
     setTimeout(() => {
-      resolve(/^[0-9]$/g.test(value + ""));
+      resolve(/^[0-9]$/.test(value + ""));
     }, 3000);
   },
-  "no number",
-);
-window.V = new ValidationNode("isNumber", /^[0-9]$/g, "no number");
+  errorMsg: "no number",
+  isAsync: true,
+});
 
-window.ValidationNode = ValidationNode;
+async function test() {
+  const result = await validation.getNode("number").result("???");
+
+  console.log(result);
+}
+
+test();

@@ -119,12 +119,11 @@
             return _super !== null && _super.apply(this, arguments) || this;
         }
         ValidationNode.prototype.validate = function (value) {
-            var matcher = this.matcher;
-            if (typeof matcher === "function") {
-                return matcher(value);
+            if (typeof this.matcher === "function") {
+                return this.matcher(value);
             }
             else {
-                return matcher.test(value);
+                return this.matcher.test(value);
             }
         };
         ValidationNode.prototype.result = function (value) {
@@ -138,18 +137,14 @@
             return _super !== null && _super.apply(this, arguments) || this;
         }
         ValidationNodeAsync.prototype.validate = function (value) {
-            return __awaiter(this, void 0, void 0, function () {
-                var _this = this;
-                return __generator(this, function (_a) {
-                    return [2 /*return*/, new Promise(function (resolve, reject) {
-                            try {
-                                _this.matcher(value, resolve);
-                            }
-                            catch (e) {
-                                reject(e);
-                            }
-                        })];
-                });
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                try {
+                    _this.matcher(value, resolve);
+                }
+                catch (e) {
+                    reject(e);
+                }
             });
         };
         ValidationNodeAsync.prototype.result = function (value) {
@@ -172,6 +167,46 @@
         };
         return ValidationNodeAsync;
     }(AbstractValidationNode));
+    //# sourceMappingURL=node.js.map
+
+    var Validation = /** @class */ (function () {
+        function Validation() {
+            this.nodes = {};
+        }
+        Validation.prototype.createNode = function (_a) {
+            var name = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg, _b = _a.isAsync, isAsync = _b === void 0 ? false : _b;
+            if (!!this.getNode(name)) {
+                return false;
+            }
+            if (!isAsync) {
+                this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
+            }
+            else {
+                this.nodes[name] = new ValidationNodeAsync(name, matcher, errorMsg);
+            }
+            return true;
+        };
+        Validation.prototype.updateNode = function (_a) {
+            var name = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg;
+            var node = this.getNode(name);
+            if (!node) {
+                return;
+            }
+            name && (node.name = name);
+            matcher && (node.matcher = matcher);
+            errorMsg && (node.errorMsg = errorMsg);
+        };
+        Validation.prototype.removeNode = function (name) {
+            var node = this.nodes[name];
+            delete this.nodes[name];
+            return node;
+        };
+        Validation.prototype.getNode = function (name) {
+            return this.nodes[name];
+        };
+        return Validation;
+    }());
+    //# sourceMappingURL=index.js.map
 
     // import Validation from "./validation/validation";
     // const _validation = new Validation();
@@ -180,13 +215,43 @@
     //   matcher: /^[0-9]$/g,
     //   errorMsg: "not number",
     // });
-    window.asyncV = new ValidationNodeAsync("isNumber", function (value, resolve) {
-        setTimeout(function () {
-            resolve(/^[0-9]$/g.test(value + ""));
-        }, 3000);
-    }, "no number");
-    window.V = new ValidationNode("isNumber", /^[0-9]$/g, "no number");
-    window.ValidationNode = ValidationNode;
+    // window.asyncV = new ValidationNodeAsync(
+    //   "isNumber",
+    //   (value: number, resolve) => {
+    //     setTimeout(() => {
+    //       resolve(/^[0-9]$/.test(value + ""));
+    //     }, 3000);
+    //   },
+    //   "no number",
+    // );
+    // window.V = new ValidationNode("isNumber", /^[0-9]$/, "no number");
+    // window.ValidationNode = ValidationNode;
+    var validation = (window.validation = new Validation());
+    validation.createNode({
+        name: "number",
+        matcher: function (value, resolve) {
+            setTimeout(function () {
+                resolve(/^[0-9]$/.test(value + ""));
+            }, 3000);
+        },
+        errorMsg: "no number",
+        isAsync: true,
+    });
+    function test() {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, validation.getNode("number").result("???")];
+                    case 1:
+                        result = _a.sent();
+                        console.log(result);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    test();
     //# sourceMappingURL=index.js.map
 
 }());

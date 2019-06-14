@@ -1,100 +1,49 @@
-import assertType from "../utils/assertType";
-import getType from "../utils/getType";
+import { ValidationNode, ValidationNodeAsync, AbstractValidationNode, IMatcher } from "./node";
 
-// TODO: Hook을 적용해야 하는데 어떻게하지?😕
-class ValidationNode {
-  state;
-  constructor(info) {
-    this.state = {
-      isAsync: false,
-      matcher: undefined,
-      errorMsg: "",
-      name: "",
-    };
-    info && assertType(info, "object") && Object.assign(this.state, info);
-  }
+interface INodeStateTypes {
+  name?: string | undefined;
+  matcher?: IMatcher | undefined;
+  errorMsg?: string | undefined;
+  isAsync?: boolean;
+}
+export default class Validation {
+  private nodes: object = {};
 
-  /**
-   * @description validate value with matcher
-   * @param {any} - value
-   */
-  validate(value) {
-    const { matcher, errorMsg } = this.state;
-    let validatedResult;
-
-    if (getType(matcher) === "function") {
-      validatedResult = matcher(value);
-    } else {
-      validatedResult = matcher.test(value);
+  createNode({ name, matcher, errorMsg, isAsync = false }: INodeStateTypes): boolean {
+    if (!!this.getNode(name)) {
+      return false;
     }
 
-    return {
-      result: validatedResult,
-      errorMsg,
-    };
-  }
-  /**
-   * @description set matcher
-   * @param {Function | Regexp} - matcher
-   */
-  setMatcher(matcher) {
-    assertType(matcher, ["function", "regexp"]);
+    if (!isAsync) {
+      this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
+    } else {
+      this.nodes[name] = new ValidationNodeAsync(name, matcher, errorMsg);
+    }
 
-    this.state.matcher = matcher;
-  }
-  /**
-   * @description get matcher
-   * @returns matcher
-   */
-  getMatcher() {
-    return this.state.matcher;
-  }
-  /**
-   * @description set Name
-   * @param {String} - name
-   */
-  setName(name) {
-    assertType(name, "string");
-
-    this.state.name = name;
-  }
-  /**
-   * @description get matcher
-   * @returns name
-   */
-  getName() {
-    return this.state.name;
-  }
-  /**
-   * @description set errorMsg
-   * @param {String} - name
-   */
-  setErrorMsg(msg) {
-    assertType(msg, "string");
-
-    this.state.errorMsg = msg;
-  }
-  /**
-   * @description get errorMsg
-   * @returns errorMsg
-   */
-  getErrorMsg() {
-    return this.state.getErrorMsg;
+    return true;
   }
 
-  /**
-   * @description set state
-   * @param {Object} - info
-   */
-  setState(info) {
-    if (!info) {
+  updateNode({ name, matcher, errorMsg }: INodeStateTypes): void {
+    const node = this.getNode(name);
+
+    if (!node) {
       return;
     }
 
-    assertType(info, "object");
+    name && (node.name = name);
+    matcher && (node.matcher = matcher);
+    errorMsg && (node.errorMsg = errorMsg);
+  }
 
-    Object.assign(this.state, info);
+  removeNode(name: string): AbstractValidationNode {
+    const node = this.nodes[name];
+
+    delete this.nodes[name];
+
+    return node;
+  }
+
+  getNode(name: string): AbstractValidationNode | undefined {
+    return this.nodes[name];
   }
 }
-
-export default ValidationNode;
