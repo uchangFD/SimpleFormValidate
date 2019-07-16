@@ -1,88 +1,70 @@
 import Hooks from "./hooks";
 
-export interface IMatcher {
+interface INode {
+  _name: string;
+  _matcher: Function | RegExp;
+  _errorMsg: string;
   matcher: Function | RegExp;
-}
-interface IValidatedResult {
-  errorMsg?: string;
-  isValid: boolean;
+  name: string;
+  errorMsg: string;
+  validate(value: any): object;
 }
 
-export abstract class AbstractValidationNode {
-  private _name: string;
-  private _matcher: IMatcher;
-  private _errorMsg: string;
+export interface IValidationNode {
+  new (name: string, matcher: Function | RegExp, errorMsg: string): INode;
+}
 
-  constructor(name: string, matcher: IMatcher, errorMsg: string) {
+export class ValidationNode implements INode {
+  _name;
+  _matcher;
+  _errorMsg;
+
+  constructor(name: string, matcher: Function | RegExp, errorMsg: string) {
     this.name = name;
     this.matcher = matcher;
     this.errorMsg = errorMsg;
   }
 
-  get matcher(): IMatcher {
+  get matcher() {
     return this._matcher;
   }
-  set matcher(matcher: IMatcher) {
+  set matcher(matcher) {
     this._matcher = matcher;
   }
 
-  get name(): string {
+  get name() {
     return this._name;
   }
-  set name(name: string) {
+  set name(name) {
     this._name = name;
   }
 
-  get errorMsg(): string {
+  get errorMsg() {
     return this._errorMsg;
   }
-  set errorMsg(errorMsg: string) {
+  set errorMsg(errorMsg) {
     this._errorMsg = errorMsg;
   }
 
-  protected getValidatedResult(isValid: boolean): IValidatedResult {
-    if (isValid) {
+  validate(value) {
+    const result = {
+      isValid: true,
+      message: "",
+    };
+
+    if (typeof this._matcher === "function") {
+      result.isValid = this._matcher(value);
+    } else {
+      result.isValid = this._matcher.test(value);
+    }
+
+    if (!result.isValid) {
       return {
-        isValid,
+        ...result,
+        message: this.errorMsg,
       };
     }
-    return { isValid, errorMsg: this.errorMsg };
-  }
 
-  abstract validate(value: any): boolean | Promise<boolean>;
-  abstract result(value: any): IValidatedResult | Promise<IValidatedResult>;
-}
-
-export class ValidationNode extends AbstractValidationNode {
-  validate(value) {
-    if (typeof this.matcher === "function") {
-      return this.matcher(value);
-    } else {
-      return this.matcher.test(value);
-    }
-  }
-
-  result(value) {
-    return this.getValidatedResult(this.validate(value));
-  }
-}
-
-export class ValidationNodeAsync extends AbstractValidationNode {
-  validate(value) {
-    return new Promise<boolean>((resolve, reject) => {
-      try {
-        this.matcher(value, resolve);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  async result(value) {
-    try {
-      return this.getValidatedResult(await this.validate(value));
-    } catch (e) {
-      throw new Error(e);
-    }
+    return result;
   }
 }

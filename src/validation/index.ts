@@ -1,47 +1,48 @@
-import { ValidationNode, ValidationNodeAsync, AbstractValidationNode, IMatcher } from "./node";
+import { ValidationNode, IValidationNode } from "./node";
 
-interface INodeStateTypes {
-  name?: string | undefined;
-  matcher?: IMatcher | undefined;
-  errorMsg?: string | undefined;
-  isAsync?: boolean;
+interface IValidation {
+  nodes: object;
+  createNode(nodeInfo: object): boolean;
+  updateNode(name: string, nodeInfo: object): this;
+  removeNode(name: string): IValidationNode | undefined;
+  getNode(name: string): IValidationNode | undefined;
 }
-export default class Validation {
-  private nodes: object = {};
 
-  createNode({ name, matcher, errorMsg, isAsync = false }: INodeStateTypes): boolean {
-    if (!!this._findNode(name)) {
+const _findNode = (nodes: object, name: string) => {
+  return nodes[name];
+};
+export default class Validation implements IValidation {
+  nodes = {};
+
+  createNode({ name, matcher, errorMsg }) {
+    if (!!_findNode(this.nodes, name)) {
       throw new Error(`Already exist node: ${name}`);
     }
 
-    if (!isAsync) {
-      this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
-    } else {
-      this.nodes[name] = new ValidationNodeAsync(name, matcher, errorMsg);
-    }
+    this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
 
     return true;
   }
 
-  updateNode(name: string, { name: _name, matcher, errorMsg }: INodeStateTypes = {}): this {
-    const node = this._findNode(name);
+  updateNode(name: string, { name: newName, matcher, errorMsg }) {
+    const node = _findNode(this.nodes, name);
 
     if (!node) {
       throw new Error(`${name} is not exist`);
     }
 
-    _name && (node.name = _name);
+    newName && (node.name = newName);
     matcher && (node.matcher = matcher);
     errorMsg && (node.errorMsg = errorMsg);
 
     return this;
   }
 
-  removeNode(name: string): AbstractValidationNode {
-    const node = this._findNode(name);
+  removeNode(name: string) {
+    const node = _findNode(this.nodes, name);
 
     if (!node) {
-      throw new Error(`${name} is not exist`);
+      return;
     }
 
     delete this.nodes[name];
@@ -49,17 +50,13 @@ export default class Validation {
     return node;
   }
 
-  getNode(name: string): AbstractValidationNode | undefined {
-    const node = this._findNode(name);
+  getNode(name: string) {
+    const node = _findNode(this.nodes, name);
 
     if (!node) {
-      throw new Error(`${name} is not exist`);
+      return;
     }
 
     return node;
-  }
-
-  private _findNode(name: string): AbstractValidationNode | undefined {
-    return this.nodes[name];
   }
 }
