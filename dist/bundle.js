@@ -81,7 +81,7 @@
         };
         return ValidationNode;
     }());
-    //# sourceMappingURL=node.js.map
+    //# sourceMappingURL=validationNode.js.map
 
     var _findNode = function (nodes, name) {
         return nodes[name];
@@ -126,20 +126,12 @@
         };
         return Validation;
     }());
+    //# sourceMappingURL=validation.js.map
+
     //# sourceMappingURL=index.js.map
 
-    var Form = /** @class */ (function () {
-        function Form() {
-        }
-        return Form;
-    }());
-    //# sourceMappingURL=index.js.map
-
-    if (window && !window.Validator) {
-        window.Validator = {
-            Validation: Validation,
-            FormValidation: Form,
-        };
+    if (window && !window.Validation) {
+        window.Validation = Validation;
     }
     //# sourceMappingURL=index.js.map
 

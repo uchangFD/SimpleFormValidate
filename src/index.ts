@@ -1,9 +1,6 @@
 import Validation from "./validation/";
 import FormValidation from "./dom";
 
-if (window && !window.Validator) {
-  window.Validator = {
-    Validation,
-    FormValidation,
-  };
+if (window && !window.Validation) {
+  window.Validation = Validation;
 }

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "test": "ava -v",
+    "test": "tsc && ava -v",
     "build": "rollup -c ./rollup/rollup.config.js --environment BUILD:production",
     "dev": "rollup -c ./rollup/rollup.config.js --environment BUILD:development -w"
   },
@@ -27,6 +27,7 @@
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.2",
+    "ts-node": "^8.3.0",
     "tslib": "^1.10.0",
     "tslint": "^5.17.0",
     "tslint-config-airbnb": "^5.11.1",
@@ -42,14 +43,19 @@
     "url": "https://github.com/uchangFD/boilerplate-with-webpack/issues"
   },
   "ava": {
+    "compileEnhancements": false,
     "babel": {
       "testOptions": {
         "babelrc": false,
         "configFile": false
       }
     },
+    "extensions": [
+      "ts"
+    ],
     "require": [
       "@babel/register",
+      "ts-node/register",
       "./__test__/browser-env.js"
     ]
   },
