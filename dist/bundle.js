@@ -217,13 +217,12 @@
         };
         return Form;
     }());
+    //# sourceMappingURL=form.js.map
 
     //# sourceMappingURL=index.js.map
 
     if (window && !window.Validation) {
-        window.Validation = Validation;
         window.FormValidation = Form;
     }
-    //# sourceMappingURL=index.js.map
 
 }());

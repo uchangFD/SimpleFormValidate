@@ -19,7 +19,7 @@
       formValidation.validation.create({
         name: "number",
         matcher: function(v) {
-          console.log(v);
+          return /^\d*$/g.test(v);
         },
         errorMsg: "Not number",
       });
