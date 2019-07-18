@@ -93,7 +93,7 @@
         Validation.prototype.createNode = function (_a) {
             var name = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg;
             if (!!_findNode(this.nodes, name)) {
-                throw new Error("Already exist node: " + name);
+                return false;
             }
             this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
             return true;
@@ -102,7 +102,7 @@
             var newName = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg;
             var node = _findNode(this.nodes, name);
             if (!node) {
-                throw new Error(name + " is not exist");
+                return this;
             }
             newName && (node.name = newName);
             matcher && (node.matcher = matcher);
@@ -130,8 +130,99 @@
 
     //# sourceMappingURL=index.js.map
 
+    var getValidationResults = function (name, validation, _a) {
+        var el = _a.el, validationTypes = _a.validationTypes;
+        var value = el.value;
+        var validationResults = validationTypes.reduce(function (acc, type) {
+            var node = validation.get(type);
+            if (node) {
+                acc.push(node.validate(value));
+            }
+            return acc;
+        }, []);
+        return {
+            name: name,
+            results: validationResults,
+        };
+    };
+    var Form = /** @class */ (function () {
+        function Form(selector) {
+            if (!selector) {
+                throw new Error("You must assign selector");
+            }
+            this.validation = (function () {
+                var _validation = new Validation();
+                return {
+                    create: function (info) {
+                        _validation.createNode(info);
+                    },
+                    update: function (name, info) {
+                        _validation.updateNode(name, info);
+                    },
+                    remove: function (name) {
+                        return _validation.removeNode(name);
+                    },
+                    get: function (name) {
+                        return _validation.getNode(name);
+                    },
+                };
+            })();
+            try {
+                var formEl = void 0;
+                if (typeof selector === "string") {
+                    formEl = document.querySelector(selector);
+                }
+                else {
+                    formEl = selector;
+                }
+                var willValidateNode = Array.from(formEl.querySelectorAll("[name]"));
+                this.formData = willValidateNode.reduce(function (acc, el) {
+                    var name = el.name;
+                    acc[name] = {
+                        el: el,
+                        validationTypes: [],
+                    };
+                    return acc;
+                }, {});
+            }
+            catch (e) {
+                throw new Error(e);
+            }
+        }
+        Form.prototype.setType = function (name, types) {
+            var validationInfo = this.formData[name];
+            if (!validationInfo) {
+                return;
+            }
+            var validationTypes = validationInfo.validationTypes;
+            if (Array.isArray(types)) {
+                types.forEach(function (type) {
+                    validationTypes.splice(-1, 0, type);
+                });
+            }
+            else {
+                validationTypes.push(types);
+            }
+            return this;
+        };
+        Form.prototype.validate = function (name) {
+            var _a = this, formData = _a.formData, validation = _a.validation;
+            if (!name) {
+                return Object.keys(formData).map(function (key) { return getValidationResults(key, validation, formData[key]); });
+            }
+            if (typeof name !== "string" && !formData[name]) {
+                return;
+            }
+            return getValidationResults(name, validation, formData[name]);
+        };
+        return Form;
+    }());
+
+    //# sourceMappingURL=index.js.map
+
     if (window && !window.Validation) {
         window.Validation = Validation;
+        window.FormValidation = Form;
     }
     //# sourceMappingURL=index.js.map
 

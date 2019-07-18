@@ -1,6 +1,6 @@
 import { ValidationNode, IValidationNode } from "./validationNode";
 
-interface IValidation {
+export interface IValidation {
   nodes: object;
   createNode(nodeInfo: object): boolean;
   updateNode(name: string, nodeInfo: object): this;
@@ -16,7 +16,7 @@ export default class Validation implements IValidation {
 
   createNode({ name, matcher, errorMsg }) {
     if (!!_findNode(this.nodes, name)) {
-      throw new Error(`Already exist node: ${name}`);
+      return false;
     }
 
     this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
@@ -28,7 +28,7 @@ export default class Validation implements IValidation {
     const node = _findNode(this.nodes, name);
 
     if (!node) {
-      throw new Error(`${name} is not exist`);
+      return this;
     }
 
     newName && (node.name = newName);

@@ -7,6 +7,25 @@
     <title>Validation Test</title>
   </head>
   <body>
+    <form id="form">
+      <input type="text" name="name" />
+      <input type="text" name="email" />
+      <input type="password" name="password" />
+    </form>
     <script src="./bundle.js"></script>
+    <script>
+      const formValidation = new FormValidation("#form");
+
+      formValidation.validation.create({
+        name: "number",
+        matcher: function(v) {
+          console.log(v);
+        },
+        errorMsg: "Not number",
+      });
+
+      formValidation.setType("name", ["number"]);
+      console.log(formValidation.validate());
+    </script>
   </body>
 </html>
