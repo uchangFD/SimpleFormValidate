@@ -1,5 +1,6 @@
 import babel from "rollup-plugin-babel";
 import typescript from "rollup-plugin-typescript";
+import visualizer from "rollup-plugin-visualizer";
 import paths from "./paths";
 
 import production from "./rollup.config.prod";
@@ -20,6 +21,7 @@ const defaults = {
       lib: ["es5", "es6", "dom"],
       target: "es5",
     }),
+    visualizer(),
   ],
 };
 
