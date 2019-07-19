@@ -4,6 +4,7 @@ import paths from "./paths";
 
 import production from "./rollup.config.prod";
 import development from "./rollup.config.dev";
+import docs from "./rollup.config.docs";
 
 const defaults = {
   input: paths.src,
@@ -22,14 +23,15 @@ const defaults = {
   ],
 };
 
-let mergeOpts;
+let config;
 
 if (process.env.BUILD === "production") {
-  mergeOpts = Object.assign(defaults, production);
+  config = Object.assign(defaults, production);
 } else if (process.env.BUILD === "development") {
-  mergeOpts = Object.assign(defaults, development);
+  const defaultOpts = Object.assign(defaults, development);
+  config = [defaultOpts, docs];
 } else {
   throw new Error(`Env property is not defined: ${process.env}`);
 }
 
-export default mergeOpts;
+export default config;
