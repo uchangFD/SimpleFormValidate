@@ -81,6 +81,7 @@
         };
         return ValidationNode;
     }());
+    //# sourceMappingURL=validationNode.js.map
 
     var _findNode = function (nodes, name) {
         return nodes[name];
@@ -125,9 +126,12 @@
         };
         return Validation;
     }());
+    //# sourceMappingURL=validation.js.map
+
+    //# sourceMappingURL=index.js.map
 
     var getValidationResults = function (name, validation, _a) {
-        var el = _a.el, validationTypes = _a.validationTypes;
+        var el = _a.el, validationTypes = _a.validationTypes, after = _a.after;
         var value = el.value;
         var validationResults = validationTypes.reduce(function (acc, type) {
             var node = validation.get(type);
@@ -139,6 +143,7 @@
         return {
             name: name,
             results: validationResults,
+            after: after,
         };
     };
     var Form = /** @class */ (function () {
@@ -176,6 +181,7 @@
                     var name = el.name;
                     acc[name] = {
                         el: el,
+                        after: undefined,
                         validationTypes: [],
                     };
                     return acc;
@@ -201,6 +207,25 @@
             }
             return this;
         };
+        Form.prototype.setAfter = function (name, after) {
+            var validationInfo = this.formData[name];
+            if (!validationInfo) {
+                return;
+            }
+            validationInfo.after = after;
+            return this;
+        };
+        Form.prototype.startAfter = function (validationResult) {
+            if (Array.isArray(validationResult)) {
+                validationResult.forEach(function (_a) {
+                    var results = _a.results, after = _a.after;
+                    if (typeof after === "function") {
+                        after(results);
+                    }
+                });
+            }
+            return this;
+        };
         Form.prototype.validate = function (name) {
             var _a = this, formData = _a.formData, validation = _a.validation;
             if (!name) {
@@ -214,8 +239,11 @@
         return Form;
     }());
 
+    //# sourceMappingURL=index.js.map
+
     if (window && !window.Validation) {
         window.FormValidation = Form;
     }
+    //# sourceMappingURL=index.js.map
 
 }());

@@ -2,11 +2,17 @@ import Validation, { IValidation } from "../validation/";
 
 interface IValidateInfo {
   [el: string]: HTMLElement;
+  [after: string]: Function | undefined;
   [validateTypes: string]: Array<string> | Array<undefined>;
 }
 
 interface IValidateInfos {
   [id: string]: IValidateInfo;
+}
+
+interface IValidateResult {
+  [isValid: string]: boolean;
+  [message: string]: string;
 }
 
 interface INodeInfo {
@@ -15,21 +21,16 @@ interface INodeInfo {
   [errorMsg: string]: string;
 }
 
-// interface IValidationApis {
-//   [add: string]: (info: INodeInfo): void;
-//   [update: string]: (name: string, info: INodeInfo): void;
-//   [remove: string]: (name: string): void;
-//   [get: string]: (name: string): INodeInfo;
-// }
-
 interface IForm {
   formData: IValidateInfos;
-  // validation: IValidation;
+  validation: IValidation;
   setType(name: string, types: string | Array<string>): this | undefined;
-  // validation();
+  setAfter(name: string, after: Function): this;
+  startAfter(validationResult: IValidateResult | Array<IValidateResult>): this;
+  validate(name: string): IValidateResult | Array<IValidateResult>;
 }
 
-const getValidationResults = (name, validation, { el, validationTypes }) => {
+const getValidationResults = (name, validation, { el, validationTypes, after }) => {
   const value = el.value;
 
   const validationResults = validationTypes.reduce((acc, type) => {
@@ -45,6 +46,7 @@ const getValidationResults = (name, validation, { el, validationTypes }) => {
   return {
     name,
     results: validationResults,
+    after,
   };
 };
 export default class Form implements IForm {
@@ -91,6 +93,7 @@ export default class Form implements IForm {
 
         acc[name] = {
           el,
+          after: undefined,
           validationTypes: [],
         };
 
@@ -116,6 +119,30 @@ export default class Form implements IForm {
       });
     } else {
       validationTypes.push(types);
+    }
+
+    return this;
+  }
+
+  setAfter(name, after) {
+    const validationInfo = this.formData[name];
+
+    if (!validationInfo) {
+      return;
+    }
+
+    validationInfo.after = after;
+
+    return this;
+  }
+
+  startAfter(validationResult) {
+    if (Array.isArray(validationResult)) {
+      validationResult.forEach(({ results, after }) => {
+        if (typeof after === "function") {
+          after(results);
+        }
+      });
     }
 
     return this;
