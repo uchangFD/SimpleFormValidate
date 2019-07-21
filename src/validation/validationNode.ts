@@ -1,5 +1,3 @@
-import Hooks from "./hooks";
-
 interface INode {
   _name: string;
   _matcher: Function | RegExp;

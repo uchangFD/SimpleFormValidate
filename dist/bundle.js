@@ -125,6 +125,9 @@
         };
         return Validation;
     }());
+    //# sourceMappingURL=validation.js.map
+
+    //# sourceMappingURL=index.js.map
 
     var getValidationResults = function (name, validation, _a) {
         var el = _a.el, validationTypes = _a.validationTypes, after = _a.after;
@@ -234,9 +237,13 @@
         };
         return Form;
     }());
+    //# sourceMappingURL=form.js.map
+
+    //# sourceMappingURL=index.js.map
 
     if (window && !window.Validation) {
         window.FormValidation = Form;
     }
+    //# sourceMappingURL=index.js.map
 
 }());
