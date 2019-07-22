@@ -11,7 +11,7 @@ export interface IValidation {
 const _findNode = (nodes: object, name: string) => {
   return nodes[name];
 };
-export default class Validation implements IValidation {
+export default class Validator implements IValidation {
   nodes = {};
 
   createNode({ name, matcher, errorMsg }) {

@@ -1,5 +1,5 @@
-import FormValidation from "./form";
+import SimpleFormValidator from "./form";
 
-if (window && !window.Validation) {
-  window.FormValidation = FormValidation;
+if (typeof window === "object") {
+  window.SimpleFormValidator = SimpleFormValidator;
 }

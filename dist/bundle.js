@@ -81,15 +81,16 @@
         };
         return ValidationNode;
     }());
+    //# sourceMappingURL=validationNode.js.map
 
     var _findNode = function (nodes, name) {
         return nodes[name];
     };
-    var Validation = /** @class */ (function () {
-        function Validation() {
+    var Validator = /** @class */ (function () {
+        function Validator() {
             this.nodes = {};
         }
-        Validation.prototype.createNode = function (_a) {
+        Validator.prototype.createNode = function (_a) {
             var name = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg;
             if (!!_findNode(this.nodes, name)) {
                 return false;
@@ -97,7 +98,7 @@
             this.nodes[name] = new ValidationNode(name, matcher, errorMsg);
             return true;
         };
-        Validation.prototype.updateNode = function (name, _a) {
+        Validator.prototype.updateNode = function (name, _a) {
             var newName = _a.name, matcher = _a.matcher, errorMsg = _a.errorMsg;
             var node = _findNode(this.nodes, name);
             if (!node) {
@@ -108,7 +109,7 @@
             errorMsg && (node.errorMsg = errorMsg);
             return this;
         };
-        Validation.prototype.removeNode = function (name) {
+        Validator.prototype.removeNode = function (name) {
             var node = _findNode(this.nodes, name);
             if (!node) {
                 return;
@@ -116,14 +117,14 @@
             delete this.nodes[name];
             return node;
         };
-        Validation.prototype.getNode = function (name) {
+        Validator.prototype.getNode = function (name) {
             var node = _findNode(this.nodes, name);
             if (!node) {
                 return;
             }
             return node;
         };
-        return Validation;
+        return Validator;
     }());
     //# sourceMappingURL=validation.js.map
 
@@ -151,7 +152,7 @@
                 throw new Error("You must assign selector");
             }
             this.validation = (function () {
-                var _validation = new Validation();
+                var _validation = new Validator();
                 return {
                     create: function (info) {
                         _validation.createNode(info);
@@ -241,9 +242,8 @@
 
     //# sourceMappingURL=index.js.map
 
-    if (window && !window.Validation) {
-        window.FormValidation = Form;
+    if (typeof window === "object") {
+        window.SimpleFormValidator = Form;
     }
-    //# sourceMappingURL=index.js.map
 
 }());

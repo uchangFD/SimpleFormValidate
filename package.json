@@ -1,15 +1,21 @@
 {
-  "name": "form-validator",
+  "name": "simple-form-validator",
   "version": "0.1.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "tsc && ava -v",
-    "build": "rollup -c ./rollup/rollup.config.js --environment BUILD:production",
-    "dev": "rollup -c ./rollup/rollup.config.js --environment BUILD:development -w"
+  "main": "./dist/bundle.js",
+  "author": "uchang heo",
+  "license": "MIT",
+  "keywords": [
+    "form Validator"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uchangFD/formValidator"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uchangFD/formValidator/issues"
+  },
+  "homepage": "https://uchangfd.github.io/formValidator/",
+  "description": "간단한 form validator 입니다.",
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.3.0",
@@ -36,13 +42,6 @@
     "typescript": "^3.5.1"
   },
   "dependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/uchangFD/boilerplate-with-webpack.git"
-  },
-  "bugs": {
-    "url": "https://github.com/uchangFD/boilerplate-with-webpack/issues"
-  },
   "ava": {
     "compileEnhancements": false,
     "babel": {
@@ -60,6 +59,9 @@
       "./__test__/browser-env.js"
     ]
   },
-  "homepage": "https://github.com/uchangFD/boilerplate-with-webpack#readme",
-  "description": ""
+  "scripts": {
+    "test": "tsc && ava -v",
+    "build": "rollup -c ./rollup/rollup.config.js --environment BUILD:production",
+    "dev": "rollup -c ./rollup/rollup.config.js --environment BUILD:development -w"
+  }
 }
