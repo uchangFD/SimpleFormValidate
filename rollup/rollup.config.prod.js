@@ -1,9 +1,9 @@
-import { uglify } from 'rollup-plugin-uglify';
+import { uglify } from "rollup-plugin-uglify";
 
 export default {
-  plugins: {
-    uglify: (() => {
-      uglify();
-    })
-  }
-}
+  // plugins: {
+  //   uglify: (() => {
+  //     uglify();
+  //   })
+  // }
+};

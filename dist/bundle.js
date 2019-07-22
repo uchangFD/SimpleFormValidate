@@ -81,7 +81,6 @@
         };
         return ValidationNode;
     }());
-    //# sourceMappingURL=validationNode.js.map
 
     var _findNode = function (nodes, name) {
         return nodes[name];
@@ -126,9 +125,6 @@
         };
         return Validator;
     }());
-    //# sourceMappingURL=validation.js.map
-
-    //# sourceMappingURL=index.js.map
 
     var getValidationResults = function (name, validation, _a) {
         var el = _a.el, validationTypes = _a.validationTypes, after = _a.after;
@@ -238,9 +234,6 @@
         };
         return Form;
     }());
-    //# sourceMappingURL=form.js.map
-
-    //# sourceMappingURL=index.js.map
 
     if (typeof window === "object") {
         window.SimpleFormValidator = Form;

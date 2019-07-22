@@ -21,7 +21,10 @@ const defaults = {
       lib: ["es5", "es6", "dom"],
       target: "es5",
     }),
-    visualizer(),
+    visualizer({
+      filename: "rollup-visualizer.html",
+      template: "treemap",
+    }),
   ],
 };
 

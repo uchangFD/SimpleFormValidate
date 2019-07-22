@@ -1,5 +1,5 @@
 {
-  "name": "simple-form-validator",
+  "name": "simple-form-validate",
   "version": "0.1.0",
   "main": "./dist/bundle.js",
   "author": "uchang heo",
@@ -9,12 +9,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uchangFD/formValidator"
+    "url": "git+https://github.com/uchangFD/SimpleFormValidate"
   },
   "bugs": {
-    "url": "https://github.com/uchangFD/formValidator/issues"
+    "url": "https://github.com/uchangFD/SimpleFormValidate/issues"
   },
-  "homepage": "https://uchangfd.github.io/formValidator/",
+  "homepage": "https://uchangfd.github.io/SimpleFormValidate/",
   "description": "간단한 form validator 입니다.",
   "devDependencies": {
     "@babel/core": "^7.2.2",
