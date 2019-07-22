@@ -4,10 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>FormValidator</title>
+    <link rel="stylesheet" href="./src/css/normalize.css" />
+    <link rel="stylesheet" href="./src/css/simpleFormValidator.css" />
+    <link rel="stylesheet" href="./src/css/icofont.min.css" />
+    <script src="./dist/simpleFormValidator.js"></script>
+    <title>SimpleFormValidator</title>
   </head>
   <body>
-    <script src="./dist/simpleFormValidator.js"></script>
+    <div class="card">
+      <div class="left">
+        <h3 class="title">Simple Form Validate</h3>
+        <div>
+          <a class="icon" href="https://github.com/uchangFD/SimpleFormValidate" title="Github">
+            <i class="icofont-github"></i>
+          </a>
+        </div>
+      </div>
+      <div class="right">
+        <form id="form">
+          <div class="input-box">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" />
+          </div>
+          <div class="input-box">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" />
+          </div>
+          <div class="input-box">
+            <label for="password-confirm">Confirm Passwrod</label>
+            <input type="password" id="password-confirm" name="password-confirm" />
+          </div>
+          <div class="input-box checkbox">
+            <h4 class="title">Hobby</h4>
+            <label for="movie">
+              Watching Movie
+              <input type="checkbox" id="movie" name="hobby" />
+            </label>
+            <label for="music">
+              listen Music
+              <input type="checkbox" id="music" name="hobby" />
+            </label>
+          </div>
+        </form>
+        <button class="submit-btn" type="button">Submit</button>
+      </div>
+    </div>
+
     <script src="./dist/bundle.js"></script>
   </body>
 </html>

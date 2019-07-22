@@ -81,6 +81,7 @@
         };
         return ValidationNode;
     }());
+    //# sourceMappingURL=validationNode.js.map
 
     var _findNode = function (nodes, name) {
         return nodes[name];
@@ -125,6 +126,9 @@
         };
         return Validator;
     }());
+    //# sourceMappingURL=validation.js.map
+
+    //# sourceMappingURL=index.js.map
 
     var getValidationResults = function (name, validation, _a) {
         var el = _a.el, validationTypes = _a.validationTypes, after = _a.after;
@@ -138,6 +142,10 @@
         }, []);
         return {
             name: name,
+            isValid: validationResults.every(function (_a) {
+                var isValid = _a.isValid;
+                return isValid;
+            }),
             results: validationResults,
             after: after,
         };
@@ -238,5 +246,6 @@
     if (typeof window === "object") {
         window.SimpleFormValidator = Form;
     }
+    //# sourceMappingURL=index.js.map
 
 }());

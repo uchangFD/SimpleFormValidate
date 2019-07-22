@@ -45,6 +45,7 @@ const getValidationResults = (name, validation, { el, validationTypes, after }) 
 
   return {
     name,
+    isValid: validationResults.every(({ isValid }) => isValid),
     results: validationResults,
     after,
   };
